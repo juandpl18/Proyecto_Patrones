@@ -17,7 +17,7 @@ Desarrollar un sistema de gestión de redes inteligentes (Smart Grid) que permit
 •	Desarrollar un panel de gestión y visualización que permita consultar información sobre consumo, generación, demanda, costos y estado general de la red.
 
 ## Patrones de diseño semana 3
-###Patron Singleton
+### Patron Singleton
 
 El sistema implementará el patrón de diseño Singleton, utilizado para garantizar que determinados componentes de la Smart Grid cuenten con una única instancia y puedan ser gestionados de manera centralizada.
 
