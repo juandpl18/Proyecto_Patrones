@@ -31,4 +31,4 @@ La parte del código que se ve afectada principalmente es la clase SmartGridConf
 
 ## Video Patrón Singleton
 
-[![Video patron singleton](https://img.youtube.com/vi/-Ea9nliN7WQ/0.jpg)](https://www.youtube.com/watch?v=-Ea9nliN7WQ)
+[![Video patron singleton](https://img.youtube.com/vi/1u5A9hnG09Y/0.jpg)](https://www.youtube.com/watch?v=1u5A9hnG09Y)
