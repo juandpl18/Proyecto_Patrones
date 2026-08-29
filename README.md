@@ -28,3 +28,5 @@ En nuestro proyecto Smart Grid lo utilizamos en la clase SmartGridConfig, porque
 La parte del código que se ve afectada principalmente es la clase SmartGridConfig. Ahí se implementa el Singleton mediante una variable estática que almacena la instancia, un constructor privado que evita crear objetos desde otras clases y el método getInstancia(), que permite obtener siempre la misma instancia.
 
 ![imagen 2 patron singleton](assets/imagen2.png)
+
+[![Video patron singleton](https://img.youtube.com/vi/-Ea9nliN7WQ/0.jpg)](https://www.youtube.com/watch?v=-Ea9nliN7WQ)
