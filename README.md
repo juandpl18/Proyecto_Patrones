@@ -1,9 +1,11 @@
 # Proyecto_Patrones
-Los patrones de software son soluciones reutilizables a problemas comunes que aparecen al diseñar y desarrollar aplicaciones. No son código listo para copiar y pegar, sino guías o plantillas que ayudan a organizar el software de una manera más eficiente, mantenible y escalable.
+Los patrones de software son soluciones reutilizables para problemas comunes que aparecen durante el diseño y desarrollo de aplicaciones. No representan código listo para copiar y pegar, sino que funcionan como guías o modelos de diseño que permiten organizar el software de una manera más eficiente, mantenible y escalable.
 
-con esto los patrones de software ayudan a mejorar la organización de código, resolver problemas recurrentes o que ocurren frecuentemente, con esto ayudando a facilitar el mantenimiento de nuestro sistema. Con esto se planean implementar patrones de software a el proyecto Smart Grid
+La implementación de patrones de software permite mejorar la organización del código, resolver problemas recurrentes y facilitar el mantenimiento y la evolución de los sistemas. Por esta razón, en este proyecto se implementarán diferentes patrones de software sobre el proyecto Smart Grid, con el propósito de mejorar progresivamente su estructura, calidad y organización.
 
-Smart Grid es un proyecto el cual se enfoca en un sistema de gestión de redes inteligentes, cuyo código se ira actualizando con ayuda de los patrones de software para mejorar la calidad de código y organización.  
+## Smart Grid
+
+Smart Grid es un sistema de gestión de redes eléctricas inteligentes enfocado en el monitoreo y administración del consumo energético. El proyecto será actualizado progresivamente mediante la implementación de diferentes patrones de software, buscando mejorar la calidad del código, reducir el acoplamiento entre sus componentes y facilitar su mantenimiento y extensión. 
 
 ### Objetivo general
 Desarrollar un sistema de gestión de redes inteligentes (Smart Grid) que permita monitorear y administrar el consumo energético en tiempo real, optimizar la distribución de la energía mediante el balanceo de cargas, integrar fuentes de energía renovable y gestionar un sistema de facturación dinámica.
