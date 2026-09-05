@@ -36,5 +36,27 @@ La parte del código que se ve afectada principalmente es la clase SmartGridConf
 ### Video Patrón Singleton
 [![Video patron singleton](https://img.youtube.com/vi/1u5A9hnG09Y/0.jpg)](https://www.youtube.com/watch?v=1u5A9hnG09Y)
 
+### Patron factory method
+
+El segundo patrón que implementamos en nuestro proyecto SmartGrid es el patrón Factory Method, y decidimos aplicarlo en el módulo de facturación.
+
+La idea es que SmartGrid puede manejar diferentes tipos de facturas, por ejemplo, facturas residenciales y comerciales, y cada una puede tener una forma diferente de calcular su tarifa.
+
+Para implementar el patrón, primero creamos la interfaz Factura, que representa el producto que queremos crear. 
+
+![imagen 1 factory method](assets/imagen3.png)
+
+Después tenemos FacturaResidencial y FacturaComercial, que son las implementaciones concretas de ese producto.
+
+![imagen 2 factory method](assets/imagen4.png)
+![imagen 3 factory method](assets/imagen5.png)
+
+Luego creamos la clase abstracta FacturaFactory. Aquí se encuentra la parte más importante del patrón, que es el método crearFactura()
+
+![imagen 4 factory method](assets/imagen6.png)
+
+
+Este método es el Factory Method, porque define qué objeto de tipo Factura debe ser creado, pero deja que las clases hijas decidan exactamente qué implementación crear.
+
 ### Bibliografia basica:
 https://profile.es/blog/patrones-de-diseno-de-software/
