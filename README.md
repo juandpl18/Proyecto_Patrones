@@ -38,32 +38,33 @@ La parte del código que se ve afectada principalmente es la clase SmartGridConf
 
 ### Patron factory method
 
-El segundo patrón que implementamos en nuestro proyecto SmartGrid es el patrón Factory Method, y decidimos aplicarlo en el módulo de facturación.
+El segundo patrón que implementamos en nuestro proyecto SmartGrid es el patrón Factory Method, aplicado dentro del módulo de facturación. Toda la estructura de este patrón se encuentra organizada dentro del paquete com.smartgrid.smartgrid.factory, comunicándose directamente con la capa de service y controller.
 
-La idea es que SmartGrid puede manejar diferentes tipos de facturas, por ejemplo, facturas residenciales y comerciales, y cada una puede tener una forma diferente de calcular su tarifa.
+La idea principal es que SmartGrid pueda manejar diferentes tipos de facturas (como residenciales y comerciales) con sus respectivas formas de calcular tarifas, sin acoplar la lógica de negocio a clases concretas.
 
-Para implementar el patrón, primero creamos la interfaz Factura, que representa el producto que queremos crear. 
+Para implementar el patrón, primero definimos la interfaz Factura dentro de la carpeta factory, la cual actúa como el Producto Abstracto estableciendo el contrato general mediante el método generarFactura().
 
 ![imagen 1 factory method](assets/imagen3.png)
 
-Después tenemos FacturaResidencial y FacturaComercial, que son las implementaciones concretas de ese producto.
+A partir de esta interfaz, creamos FacturaResidencial y FacturaComercial, que representan los Productos Concretos. En estas clases se implementa la lógica específica de tarifa y formato según la categoría del usuario.
 
 ![imagen 2 factory method](assets/imagen4.png)
 
 ![imagen 3 factory method](assets/imagen5.png)
 
-Luego creamos la clase abstracta FacturaFactory. Aquí se encuentra la parte más importante del patrón, que es el método crearFactura()
+Luego, creamos la clase abstracta FacturaFactory, que cumple el rol de Creador Abstracto. Aquí se encuentra el núcleo del patrón: el método abstracto crearFactura(), que es formalmente el Factory Method.
 
 ![imagen 4 factory method](assets/imagen6.png)
 
-Este método es el Factory Method, porque define qué objeto de tipo Factura debe ser creado, pero deja que las clases hijas decidan exactamente qué implementación crear. Por ejemplo, tenemos FacturaResidencialFactory, que cuando ejecuta crearFactura() retorna una FacturaResidencial, y tenemos FacturaComercialFactory, que retorna una FacturaComercial.
+Este método define qué objeto de tipo Factura debe ser creado, pero deja que las clases hijas (Creadores Concretos) decidan exactamente qué implementación instanciar. Por ejemplo, tenemos FacturaResidencialFactory, que cuando ejecuta crearFactura() retorna una FacturaResidencial, y tenemos FacturaComercialFactory, que retorna una FacturaComercial.
 
-Finalmente, en FacturacionService no creamos directamente las facturas residenciales o comerciales. El servicio trabaja con la abstracción FacturaFactory y recibe las diferentes fábricas mediante Spring.
+Por su parte, en el servicio FacturacionService (ubicado en el paquete service) no creamos directamente las facturas residenciales o comerciales. El servicio opera como cliente del patrón trabajando con la abstracción FacturaFactory mediante la inyección de dependencias de Spring.
 
 ![imagen 5 factory method](assets/imagen7.png)
 
-De esta manera, si en el futuro necesitamos agregar una factura industrial, podemos crear FacturaIndustrial y FacturaIndustrialFactory, sin tener que modificar la lógica principal de FacturacionService.
-Por eso Factory Method nos permite separar la creación de los objetos de su utilización y hacer que el sistema sea más fácil de ampliar y mantener.
+Esta lógica se conecta con el exterior a través de FacturacionController (en el paquete controller), el cual expone el endpoint REST /api/facturacion. Al ingresar una petición HTTP especificando el tipo de cliente y el consumo, el controlador transfiere los datos a FacturacionService, el cual busca la fábrica correspondiente, ejecuta su Factory Method y retorna el cálculo en formato JSON.
+
+De esta manera, si en el futuro necesitamos agregar una factura industrial, simplemente creamos FacturaIndustrial y FacturaIndustrialFactory dentro del paquete factory, sin necesidad de modificar la lógica de FacturacionService ni del controlador. Así, Factory Method logra separar por completo la creación de los objetos de su utilización, haciendo que el sistema sea mucho más fácil de ampliar y mantener.
 
 ### Video Patrón Factory Method
 
