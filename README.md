@@ -1,6 +1,9 @@
 # Proyecto_Patrones
+Los patrones de software son soluciones reutilizables a problemas comunes que aparecen al diseñar y desarrollar aplicaciones. No son código listo para copiar y pegar, sino guías o plantillas que ayudan a organizar el software de una manera más eficiente, mantenible y escalable.
 
-### Avance documentación semana 1
+con esto los patrones de software ayudan a mejorar la organización de código, resolver problemas recurrentes o que ocurren frecuentemente, con esto ayudando a facilitar el mantenimiento de nuestro sistema. Con esto se planean implementar patrones de software a el proyecto Smart Grid
+
+Smart Grid es un proyecto el cual se enfoca en un sistema de gestión de redes inteligentes, cuyo código se ira actualizando con ayuda de los patrones de software para mejorar la calidad de código y organización.  
 
 ### Objetivo general
 Desarrollar un sistema de gestión de redes inteligentes (Smart Grid) que permita monitorear y administrar el consumo energético en tiempo real, optimizar la distribución de la energía mediante el balanceo de cargas, integrar fuentes de energía renovable y gestionar un sistema de facturación dinámica.
@@ -16,7 +19,6 @@ Desarrollar un sistema de gestión de redes inteligentes (Smart Grid) que permit
 
 •	Desarrollar un panel de gestión y visualización que permita consultar información sobre consumo, generación, demanda, costos y estado general de la red.
 
-## Patrones de diseño semana 3
 ### Patron Singleton
 
 El sistema implementará el patrón de diseño Singleton, utilizado para garantizar que determinados componentes de la Smart Grid cuenten con una única instancia y puedan ser gestionados de manera centralizada.
@@ -31,3 +33,6 @@ La parte del código que se ve afectada principalmente es la clase SmartGridConf
 
 ### Video Patrón Singleton
 [![Video patron singleton](https://img.youtube.com/vi/1u5A9hnG09Y/0.jpg)](https://www.youtube.com/watch?v=1u5A9hnG09Y)
+
+### Bibliografia basica:
+https://profile.es/blog/patrones-de-diseno-de-software/
