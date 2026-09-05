@@ -65,5 +65,8 @@ Finalmente, en FacturacionService no creamos directamente las facturas residenci
 De esta manera, si en el futuro necesitamos agregar una factura industrial, podemos crear FacturaIndustrial y FacturaIndustrialFactory, sin tener que modificar la lógica principal de FacturacionService.
 Por eso Factory Method nos permite separar la creación de los objetos de su utilización y hacer que el sistema sea más fácil de ampliar y mantener.
 
+### Video Patrón Factory Method
+
+[![Video patron singleton](https://img.youtube.com/vi/Ty08ICiVTJ0/0.jpg)](https://www.youtube.com/watch?v=Ty08ICiVTJ0)
 ### Bibliografia basica:
 https://profile.es/blog/patrones-de-diseno-de-software/
