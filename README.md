@@ -49,14 +49,21 @@ Para implementar el patrón, primero creamos la interfaz Factura, que representa
 Después tenemos FacturaResidencial y FacturaComercial, que son las implementaciones concretas de ese producto.
 
 ![imagen 2 factory method](assets/imagen4.png)
+
 ![imagen 3 factory method](assets/imagen5.png)
 
 Luego creamos la clase abstracta FacturaFactory. Aquí se encuentra la parte más importante del patrón, que es el método crearFactura()
 
 ![imagen 4 factory method](assets/imagen6.png)
 
+Este método es el Factory Method, porque define qué objeto de tipo Factura debe ser creado, pero deja que las clases hijas decidan exactamente qué implementación crear. Por ejemplo, tenemos FacturaResidencialFactory, que cuando ejecuta crearFactura() retorna una FacturaResidencial, y tenemos FacturaComercialFactory, que retorna una FacturaComercial.
 
-Este método es el Factory Method, porque define qué objeto de tipo Factura debe ser creado, pero deja que las clases hijas decidan exactamente qué implementación crear.
+Finalmente, en FacturacionService no creamos directamente las facturas residenciales o comerciales. El servicio trabaja con la abstracción FacturaFactory y recibe las diferentes fábricas mediante Spring.
+
+![imagen 5 factory method](assets/imagen7.png)
+
+De esta manera, si en el futuro necesitamos agregar una factura industrial, podemos crear FacturaIndustrial y FacturaIndustrialFactory, sin tener que modificar la lógica principal de FacturacionService.
+Por eso Factory Method nos permite separar la creación de los objetos de su utilización y hacer que el sistema sea más fácil de ampliar y mantener.
 
 ### Bibliografia basica:
 https://profile.es/blog/patrones-de-diseno-de-software/
