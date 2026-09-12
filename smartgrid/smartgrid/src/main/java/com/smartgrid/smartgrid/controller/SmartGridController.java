@@ -17,4 +17,9 @@ public class SmartGridController {
     public String obtenerEstado() {
         return service.obtenerEstado();
     }
+
+    @GetMapping("/smartgrid/singleton")
+    public String comprobarSingleton() {
+        return service.comprobarSingleton();
+    }
 }

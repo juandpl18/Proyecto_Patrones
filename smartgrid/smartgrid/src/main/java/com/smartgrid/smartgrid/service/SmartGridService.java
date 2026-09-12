@@ -20,4 +20,16 @@ public class SmartGridService {
 
         return "SmartGrid está inactivo";
     }
+
+    public String comprobarSingleton() {
+
+        SmartGridConfig config1 =
+                SmartGridConfig.getInstancia();
+
+        SmartGridConfig config2 =
+                SmartGridConfig.getInstancia();
+
+        return "¿Es la misma instancia? "
+                + (config1 == config2);
+    }
 }
