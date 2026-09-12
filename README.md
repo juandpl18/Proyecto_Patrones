@@ -69,5 +69,19 @@ De esta manera, si en el futuro necesitamos agregar una factura industrial, simp
 ### Video Patrón Factory Method
 
 [![Video patron singleton](https://img.youtube.com/vi/Ty08ICiVTJ0/0.jpg)](https://www.youtube.com/watch?v=Ty08ICiVTJ0)
-### Bibliografia basica:
-https://profile.es/blog/patrones-de-diseno-de-software/
+
+Este módulo incorpora el patrón creacional Builder para gestionar la construcción flexible einmutable de objetos de infraestructura en la red eléctrica, como plantas de energía. Su adición permite instanciar componentes de red diferenciando estrictamente los datos obligatorios de los opcionales. De esta forma, el proyecto evita la creación de constructores recargados o el envío repetitivo de valores nulos, al mismo tiempo que garantiza la inmutabilidad de los datos en memoria y expone un servicio REST preparado para conectarse con Angular sin requerir cambios en la base de datos.
+
+La aplicación del patrón se realiza definiendo la clase principal PlantaEnergia con un constructorprivado que incorpora dentro una clase estática estandarizada denominada PlantaEnergiaBuilder. El constructor del builder exige obligatoriamente los parámetros nombre y tipoFuente, mientras que los métodos encadenados como capacidadKw o ubicacion configuran las propiedades opcionales antes de ejecutar el método final build para obtener la instancia definitiva.
+
+En cuanto al detalle del código, el archivo PlantaEnergia.java define la estructura de datos con atributos privados y finales para asegurar su inmutabilidad, conteniendo la clase interna PlantaEnergiaBuilder que asigna valores por defecto a las propiedades opcionales y proporciona la interfaz de encadenamiento. 
+
+![imagen 1 metodo builder](assets/imagen8.png)
+
+Por su parte, el archivo PlantaEnergiaService.java se encarga de la orquestación de negocio al recibir los valores de la petición, inicializar el builder con los campos requeridos, evaluar qué atributos opcionales fueron enviados y retornar la planta construida.
+
+![imagen 2 metodo builder](assets/imagen9.png)
+
+Finalmente, el archivo PlantaEnergiaController.java habilita el punto de entrada REST en la ruta /api/planta/crear con soporte para peticiones cruzadas mediante la anotación CrossOrigin. Este controlador recibe las solicitudes HTTP procesando los parámetros obligatorios y opcionales, delega la construcción al servicio de negocio y devuelve la respuesta en un objeto estructurado en formato JSON listo para el consumo del cliente
+
+![imagen 3 metodo builder](assets/imagen10.png)
