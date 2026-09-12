@@ -70,6 +70,8 @@ De esta manera, si en el futuro necesitamos agregar una factura industrial, simp
 
 [![Video patron singleton](https://img.youtube.com/vi/Ty08ICiVTJ0/0.jpg)](https://www.youtube.com/watch?v=Ty08ICiVTJ0)
 
+### Patron Builder
+
 Este módulo incorpora el patrón creacional Builder para gestionar la construcción flexible inmutable de objetos de infraestructura en la red eléctrica, como plantas de energía. Su adición permite instanciar componentes de red diferenciando estrictamente los datos obligatorios de los opcionales. De esta forma, el proyecto evita la creación de constructores recargados o el envío repetitivo de valores nulos, al mismo tiempo que garantiza la inmutabilidad de los datos en memoria y expone un servicio REST preparado para conectarse con Angular sin requerir cambios en la base de datos.
 
 La aplicación del patrón se realiza definiendo la clase principal PlantaEnergia con un constructor privado que incorpora dentro una clase estática estandarizada denominada PlantaEnergiaBuilder. El constructor del builder exige obligatoriamente los parámetros nombre y tipoFuente, mientras que los métodos encadenados como capacidadKw o ubicacion configuran las propiedades opcionales antes de ejecutar el método final build para obtener la instancia definitiva.
