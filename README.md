@@ -89,4 +89,4 @@ Finalmente, el archivo PlantaEnergiaController.java habilita el punto de entrada
 ![imagen 3 metodo builder](assets/imagen10.png)
 
 ### Video Patrón Builder
-[![Video patron singleton](https://img.youtube.com/vi/ghf-MfEC9mAY/0.jpg)](https://www.youtube.com/watch?v=ghf-MfEC9mA)
+[![Video patron singleton](https://img.youtube.com/vi/ghf-MfEC9mA/0.jpg)](https://www.youtube.com/watch?v=ghf-MfEC9mA)
