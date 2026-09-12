@@ -87,3 +87,6 @@ Por su parte, el archivo PlantaEnergiaService.java se encarga de la orquestació
 Finalmente, el archivo PlantaEnergiaController.java habilita el punto de entrada REST en la ruta /api/planta/crear con soporte para peticiones cruzadas mediante la anotación CrossOrigin. Este controlador recibe las solicitudes HTTP procesando los parámetros obligatorios y opcionales, delega la construcción al servicio de negocio y devuelve la respuesta en un objeto estructurado en formato JSON listo para el consumo del cliente
 
 ![imagen 3 metodo builder](assets/imagen10.png)
+
+### Video Patrón Builder
+[![Video patron singleton](https://img.youtube.com/vi/ghf-MfEC9mAY/0.jpg)](https://www.youtube.com/watch?v=ghf-MfEC9mA)
