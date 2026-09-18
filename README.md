@@ -7,6 +7,443 @@ La implementación de patrones de software permite mejorar la organización del 
 
 Smart Grid es un sistema de gestión de redes eléctricas inteligentes enfocado en el monitoreo y administración del consumo energético. El proyecto será actualizado progresivamente mediante la implementación de diferentes patrones de software, buscando mejorar la calidad del código, reducir el acoplamiento entre sus componentes y facilitar su mantenimiento y extensión. 
 
+# Ejecución del proyecto SmartGrid
+
+## 1. Requisitos
+
+Para ejecutar el proyecto SmartGrid se necesitan las siguientes herramientas:
+
+* **IntelliJ IDEA** o Visual Studio Code.
+* **Java JDK 21**.
+* **PostgreSQL**.
+* **pgAdmin 4**.
+* Conexión a Internet para descargar las dependencias de Maven.
+
+En este proyecto se utilizó principalmente **IntelliJ IDEA** para el desarrollo y **PostgreSQL** como sistema gestor de bases de datos.
+
+---
+
+# 2. Descargar el proyecto
+
+El código fuente del proyecto se encuentra disponible en GitHub.
+
+### Código fuente de SmartGrid
+
+[Descargar proyecto SmartGrid](https://github.com/juandpl18/Proyecto_Patrones/tree/main/smartgrid/smartgrid)
+
+También se encuentra dentro del repositorio principal:
+
+```text
+Proyecto_Patrones
+│
+├── smartgrid
+│   └── smartgrid
+│
+└── Base de datos
+    └── smartgrid.sql
+```
+
+Se puede descargar el repositorio completo utilizando el botón **Code → Download ZIP** de GitHub o mediante Git:
+
+```bash
+git clone https://github.com/juandpl18/Proyecto_Patrones.git
+```
+
+Después de descargarlo, se debe localizar la carpeta:
+
+```text
+Proyecto_Patrones/smartgrid/smartgrid
+```
+
+---
+
+# 3. Abrir el proyecto en IntelliJ IDEA
+
+1. Abrir **IntelliJ IDEA**.
+2. Seleccionar:
+
+```text
+File → Open
+```
+
+3. Buscar la carpeta:
+
+```text
+Proyecto_Patrones/smartgrid/smartgrid
+```
+
+4. Seleccionar la carpeta y abrir el proyecto.
+5. IntelliJ detectará el archivo:
+
+```text
+pom.xml
+```
+
+6. Esperar a que Maven descargue todas las dependencias necesarias.
+
+El proyecto está desarrollado con **Spring Boot**, por lo que Maven se encargará de descargar las librerías definidas en `pom.xml`.
+
+---
+
+# 4. Verificar Java
+
+El proyecto utiliza **Java 21**.
+
+En IntelliJ se debe verificar:
+
+```text
+File → Project Structure → Project
+```
+
+y comprobar que el SDK seleccionado sea:
+
+```text
+Java 21
+```
+
+También se puede verificar desde la terminal:
+
+```bash
+java -version
+```
+
+Debe aparecer una versión correspondiente a Java 21.
+
+---
+
+# 5. Instalar y preparar PostgreSQL
+
+El proyecto utiliza PostgreSQL como base de datos.
+
+Abrir **pgAdmin 4** y conectarse al servidor PostgreSQL.
+
+Crear una nueva base de datos llamada:
+
+```text
+smartgrid
+```
+
+La estructura debe quedar:
+
+```text
+Servers
+└── PostgreSQL
+    └── Databases
+        └── smartgrid
+```
+
+---
+
+# 6. Importar la base de datos
+
+Dentro del repositorio se encuentra el archivo:
+
+[smartgrid.sql](https://github.com/juandpl18/Proyecto_Patrones/blob/main/Base%20de%20datos/smartgrid.sql)
+
+ubicado en:
+
+```text
+Base de datos/smartgrid.sql
+```
+
+Este archivo corresponde al respaldo de la base de datos PostgreSQL.
+
+Para restaurarlo desde pgAdmin se puede utilizar **Query Tool** y ejecutar el contenido del archivo SQL.
+
+También se puede utilizar la opción de restauración de PostgreSQL cuando el formato del respaldo lo permita.
+
+> **Nota:** antes de ejecutar el proyecto se debe comprobar que el archivo `smartgrid.sql` contenga las instrucciones `CREATE TABLE`, restricciones y, si corresponde, los datos de prueba. Si el archivo solo contiene la cabecera del `pg_dump`, se debe generar nuevamente el respaldo desde pgAdmin.
+
+---
+
+# 7. Configurar la conexión con PostgreSQL
+
+Dentro del proyecto se encuentra:
+
+```text
+src
+└── main
+    └── resources
+        └── application.properties
+```
+
+La configuración debe apuntar a la base de datos `smartgrid`.
+
+Ejemplo:
+
+```properties
+spring.application.name=smartgrid
+
+spring.datasource.url=jdbc:postgresql://localhost:5432/smartgrid
+spring.datasource.username=postgres
+spring.datasource.password=TU_CONTRASEÑA
+
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+spring.jpa.properties.hibernate.format_sql=true
+```
+
+Se debe reemplazar:
+
+```text
+TU_CONTRASEÑA
+```
+
+por la contraseña correspondiente al usuario de PostgreSQL.
+
+## Importante
+
+No se debe publicar una contraseña real de PostgreSQL en GitHub.
+
+Para una instalación local se puede utilizar la contraseña propia de cada equipo.
+
+---
+
+# 8. Verificar la conexión con PostgreSQL
+
+Antes de ejecutar el proyecto, comprobar que:
+
+* PostgreSQL esté ejecutándose.
+* La base de datos se llame `smartgrid`.
+* El puerto sea `5432`, salvo que se haya configurado otro.
+* El usuario de PostgreSQL sea correcto.
+* La contraseña sea correcta.
+* La URL de conexión coincida con la configuración de `application.properties`.
+
+La configuración utilizada originalmente por el proyecto es:
+
+```text
+Host: localhost
+Puerto: 5432
+Base de datos: smartgrid
+Usuario: postgres
+```
+
+---
+
+# 9. Ejecutar SmartGrid
+
+En IntelliJ localizar la clase principal del proyecto:
+
+```text
+src
+└── main
+    └── java
+        └── com.smartgrid.smartgrid
+            └── SmartgridApplication.java
+```
+
+Abrir la clase y presionar:
+
+```text
+▶ Run
+```
+
+También se puede ejecutar desde Maven mediante:
+
+```bash
+mvn spring-boot:run
+```
+
+Si la ejecución es correcta, en la consola de IntelliJ aparecerá el inicio de Spring Boot y el servidor quedará disponible normalmente en:
+
+```text
+http://localhost:8080
+```
+
+---
+
+# 10. Comprobar que SmartGrid está funcionando
+
+Una vez iniciado el proyecto, se pueden utilizar los endpoints disponibles en el proyecto.
+
+Por ejemplo, para consultar el estado del sistema:
+
+```text
+http://localhost:8080/smartgrid/estado
+```
+
+Si el sistema está activo, se mostrará:
+
+```text
+SmartGrid está ACTIVO
+```
+
+Este endpoint permite comprobar también el funcionamiento del patrón **Singleton**, ya que el estado se obtiene desde la instancia única de `SmartGridConfig`.
+
+---
+
+# 11. Probar el patrón Factory Method
+
+El patrón Factory Method se implementó en el módulo de facturación.
+
+Para generar una factura residencial:
+
+```text
+http://localhost:8080/facturacion/generar?tipo=RESIDENCIAL&consumo=350
+```
+
+Para una factura comercial:
+
+```text
+http://localhost:8080/facturacion/generar?tipo=COMERCIAL&consumo=350
+```
+
+El sistema selecciona la fábrica correspondiente y genera el tipo de factura solicitado.
+
+La estructura principal es:
+
+```text
+FacturaFactory
+├── FacturaResidencialFactory
+│   └── FacturaResidencial
+│
+└── FacturaComercialFactory
+    └── FacturaComercial
+```
+
+---
+
+# 12. Probar el patrón Builder
+
+El patrón Builder se implementó en la construcción de una `PlantaEnergia`.
+
+El endpoint utilizado es:
+
+```text
+/api/planta/crear
+```
+
+Por ejemplo:
+
+```text
+http://localhost:8080/api/planta/crear?nombre=PlantaSolar&fuente=SOLAR&capacidad=1000&bateria=true&ubicacion=Bucaramanga
+```
+
+El controlador recibe los parámetros y el servicio utiliza `PlantaEnergiaBuilder` para construir el objeto.
+
+El proceso es:
+
+```text
+Controller
+    ↓
+PlantaEnergiaService
+    ↓
+PlantaEnergiaBuilder
+    ↓
+build()
+    ↓
+PlantaEnergia
+```
+
+El resultado se devuelve como un objeto JSON.
+
+---
+
+# 13. Estructura general del proyecto
+
+La estructura principal de SmartGrid es:
+
+```text
+smartgrid
+│
+├── src
+│   └── main
+│       ├── java
+│       │   └── com.smartgrid.smartgrid
+│       │       ├── builder
+│       │       │   └── PlantaEnergia.java
+│       │       │
+│       │       ├── config
+│       │       │   └── SmartGridConfig.java
+│       │       │
+│       │       ├── controller
+│       │       │
+│       │       ├── factory
+│       │       │   ├── Factura.java
+│       │       │   ├── FacturaFactory.java
+│       │       │   ├── FacturaResidencial.java
+│       │       │   ├── FacturaResidencialFactory.java
+│       │       │   ├── FacturaComercial.java
+│       │       │   └── FacturaComercialFactory.java
+│       │       │
+│       │       └── service
+│       │
+│       └── resources
+│           └── application.properties
+│
+├── pom.xml
+└── README.md
+```
+
+---
+
+# 14. Patrones de diseño implementados
+
+Actualmente SmartGrid implementa los siguientes patrones:
+
+### Singleton
+
+Utilizado para controlar la configuración y el estado global de SmartGrid.
+
+```text
+SmartGridConfig
+```
+
+### Factory Method
+
+Utilizado en el módulo de facturación para crear diferentes tipos de factura.
+
+```text
+FacturaFactory
+├── FacturaResidencialFactory
+└── FacturaComercialFactory
+```
+
+### Builder
+
+Utilizado para construir objetos `PlantaEnergia` de manera flexible y ordenada.
+
+```text
+PlantaEnergia
+└── PlantaEnergiaBuilder
+```
+
+Otros patrones como **Prototype** y **Abstract Factory** no fueron incorporados debido a que actualmente no existe una necesidad funcional dentro del proyecto que justifique su utilización. De esta manera se evita agregar clases o funcionalidades únicamente para demostrar un patrón y se mantiene el diseño enfocado en las necesidades reales de SmartGrid.
+
+---
+
+# 15. Resumen de ejecución
+
+El proceso completo para ejecutar el proyecto es:
+
+```text
+1. Descargar/clonar el repositorio
+        ↓
+2. Abrir smartgrid/smartgrid en IntelliJ IDEA
+        ↓
+3. Verificar Java 21
+        ↓
+4. Instalar/iniciar PostgreSQL
+        ↓
+5. Crear la base de datos smartgrid
+        ↓
+6. Importar smartgrid.sql
+        ↓
+7. Configurar application.properties
+        ↓
+8. Verificar usuario y contraseña de PostgreSQL
+        ↓
+9. Ejecutar SmartgridApplication
+        ↓
+10. Acceder a localhost:8080
+        ↓
+11. Probar los endpoints
+```
+
+Con estos pasos se puede descargar, configurar y ejecutar el proyecto SmartGrid en un equipo diferente al utilizado durante el desarrollo.
+
+
 ### Objetivo general
 Desarrollar un sistema de gestión de redes inteligentes (Smart Grid) que permita monitorear y administrar el consumo energético en tiempo real, optimizar la distribución de la energía mediante el balanceo de cargas, integrar fuentes de energía renovable y gestionar un sistema de facturación dinámica.
 
@@ -110,3 +547,6 @@ El patrón Abstract Factory sirve para crear familias de objetos relacionados o 
 ### Patrón Prototype
 
 Por su parte, el patrón Prototype sirve para crear nuevos objetos clonando o copiando instancias ya existentes en memoria, evitando el costo de una inicialización desde cero. Este patrón se descarta en el proyecto debido a que no se alinea con el modelo de desarrollo de nuestra API REST en Spring Boot, la cual opera de forma sin estado (stateless) recibiendo parámetros directamente del cliente en Angular mediante solicitudes HTTP. En este flujo, cada objeto debe construirse dinámicamente a partir del payload JSON de la petición, una necesidad de instanciación flexible e inmutable que ya queda completamente cubierta en la capa de negocio mediante el patrón Builder.
+
+
+
