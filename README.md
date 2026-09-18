@@ -3,7 +3,7 @@ Los patrones de software son soluciones reutilizables para problemas comunes que
 
 La implementación de patrones de software permite mejorar la organización del código, resolver problemas recurrentes y facilitar el mantenimiento y la evolución de los sistemas. Por esta razón, en este proyecto se implementarán diferentes patrones de software sobre el proyecto Smart Grid, con el propósito de mejorar progresivamente su estructura, calidad y organización.
 
-> **Nota:** Este proyecto se manejara por semanas dentro de cada directorio/carpeta nombradas pro su correspondiente semana se irán agregando los avances obtenidos dejando la constancia del trabajo realizado con anterioridad. El proyecto completo se encontrara en la carpeta `smartgrid/smartgrid` y la caorrespondiente base de datos en ` base de datos`
+> **Nota:** Este proyecto se manejara por semanas dentro de cada directorio/carpeta nombradas por su correspondiente semana se irán agregando los avances obtenidos dejando la constancia del trabajo realizado con anterioridad. El proyecto completo se encontrara en la carpeta `smartgrid/smartgrid` y la caorrespondiente base de datos en `Base de datos`
 
 ## Smart Grid
 
