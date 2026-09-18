@@ -102,3 +102,11 @@ Finalmente, el archivo PlantaEnergiaController.java habilita el punto de entrada
 
 ### Video Patrón Builder
 [![Video patron singleton](https://img.youtube.com/vi/ghf-MfEC9mA/0.jpg)](https://www.youtube.com/watch?v=ghf-MfEC9mA)
+
+### Patrón Abstract Factory
+
+El patrón Abstract Factory sirve para crear familias de objetos relacionados o dependientes sin especificar sus clases concretas. Sin embargo, no se incluye en Smart Grid porque la arquitectura del backend está organizada en módulos autónomos (factory, config y builder) que no requieren instanciar grupos de objetos interdependientes en bloque. Dado que la facturación, la configuración de la red y el registro de la infraestructura operan de manera totalmente independiente, implementar este patrón obligaría a añadir interfaces y fábricas multinivel que solo aportarían complejidad estructural y sobrediseño sin generar ningún beneficio en la evolución del código.
+
+### Patrón Prototype
+
+Por su parte, el patrón Prototype sirve para crear nuevos objetos clonando o copiando instancias ya existentes en memoria, evitando el costo de una inicialización desde cero. Este patrón se descarta en el proyecto debido a que no se alinea con el modelo de desarrollo de nuestra API REST en Spring Boot, la cual opera de forma sin estado (stateless) recibiendo parámetros directamente del cliente en Angular mediante solicitudes HTTP. En este flujo, cada objeto debe construirse dinámicamente a partir del payload JSON de la petición, una necesidad de instanciación flexible e inmutable que ya queda completamente cubierta en la capa de negocio mediante el patrón Builder.
