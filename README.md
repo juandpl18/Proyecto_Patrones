@@ -178,7 +178,7 @@ De esta manera, si posteriormente se necesita agregar otra responsabilidad al in
 
 ### Video Patrón Adapter y Decorator
 
-(https://img.youtube.com/vi/SI6Rr6OUCIs/0.jpg)](https://www.youtube.com/watch?v=SI6Rr6OUCIs)
+[![Video patron Adapter y Decorator](https://img.youtube.com/vi/SI6Rr6OUCIs/0.jpg)](https://www.youtube.com/watch?v=SI6Rr6OUCIs)
 
 ### Patrón Bridge
 
