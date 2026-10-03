@@ -115,6 +115,98 @@ El patrón Abstract Factory sirve para crear familias de objetos relacionados o 
 
 Por su parte, el patrón Prototype sirve para crear nuevos objetos clonando o copiando instancias ya existentes en memoria, evitando el costo de una inicialización desde cero. Este patrón se descarta en el proyecto debido a que no se alinea con el modelo de desarrollo de nuestra API REST en Spring Boot, la cual opera de forma sin estado (stateless) recibiendo parámetros directamente del cliente en Angular mediante solicitudes HTTP. En este flujo, cada objeto debe construirse dinámicamente a partir del payload JSON de la petición, una necesidad de instanciación flexible e inmutable que ya queda completamente cubierta en la capa de negocio mediante el patrón Builder.
 
+### Patrón Adapter
+
+El patrón Adapter se implementa en Smart Grid dentro del módulo de autenticación. Su objetivo es permitir que el proceso de autenticación trabaje mediante una interfaz común, separando la lógica utilizada para validar los usuarios de los componentes que consumen este servicio.
+
+La aplicación define la interfaz `Autenticacion`, la cual establece el contrato mediante el método `autenticar(String username, String password)`. Esta interfaz permite que el sistema trabaje con una abstracción de autenticación sin depender directamente de la forma en que se almacenan o validan los usuarios.
+
+[imagen 1 patron adapter]
+
+La implementación concreta se encuentra en `AutenticacionLocalAdapter`, ubicada dentro del paquete `adapter`. Esta clase implementa la interfaz `Autenticacion` y adapta el proceso de autenticación local utilizando `UsuarioRepository` y `PasswordEncoder`.
+
+Cuando el usuario intenta iniciar sesión, el Adapter busca el usuario mediante `UsuarioRepository`, verifica que se encuentre activo y posteriormente comprueba la contraseña utilizando BCrypt. Si las credenciales son correctas, retorna el objeto `Usuario`; de lo contrario, retorna un resultado nulo.
+
+[imagen 2 patron adapter]
+
+Por su parte, `AutenticacionService` trabaja con la abstracción `Autenticacion` y no necesita conocer directamente la implementación utilizada para realizar la autenticación. De esta manera, el servicio puede utilizar el Adapter sin quedar acoplado directamente al repositorio o a la lógica de validación de contraseñas.
+
+El flujo de autenticación queda organizado de la siguiente manera:
+
+`AuthController → AutenticacionService → AutenticacionLocalAdapter → UsuarioRepository → PostgreSQL`
+
+Esta estructura permite que en el futuro se pueda agregar otra forma de autenticación, como una autenticación mediante un servicio externo, creando un nuevo Adapter que implemente la misma interfaz sin modificar el controlador ni la lógica principal del servicio.
+
+### Diagrama UML Adapter
+
+[UML patron adapter]
+
+### Video Patrón Adapter
+
+
+
+### Patrón Decorator
+
+El patrón Decorator se implementa en Smart Grid como complemento del sistema de autenticación. Su finalidad es permitir agregar una responsabilidad adicional al proceso de inicio de sesión sin modificar directamente la implementación original de la autenticación.
+
+Para esto se utiliza la clase abstracta `AutenticacionDecorator`, que implementa la interfaz `Autenticacion` y mantiene una referencia hacia otra implementación de la misma interfaz. Esto permite envolver el comportamiento existente y agregar nuevas funcionalidades.
+
+[imagen 1 patron decorator]
+
+La implementación concreta es `AuditoriaLoginDecorator`. Esta clase recibe `AutenticacionLocalAdapter` y ejecuta primero el proceso normal de autenticación. Después de obtener el resultado, agrega la funcionalidad de auditoría registrando en consola si el inicio de sesión fue exitoso o fallido.
+
+Por ejemplo, cuando el usuario `admin` inicia sesión correctamente, se registra:
+
+`[AUDITORIA] Inicio de sesión exitoso: admin`
+
+Si las credenciales son incorrectas, se registra:
+
+`[AUDITORIA] Intento de inicio de sesión fallido: admin`
+
+[imagen 2 patron decorator]
+
+La principal ventaja de esta implementación es que la auditoría se agrega sin modificar `AutenticacionLocalAdapter`. El Decorator funciona como una capa adicional alrededor del proceso original.
+
+El flujo queda organizado de la siguiente manera:
+
+`AuthController → AutenticacionService → AuditoriaLoginDecorator → AutenticacionLocalAdapter → UsuarioRepository`
+
+De esta manera, si posteriormente se necesita agregar otra responsabilidad al inicio de sesión, como registrar estadísticas o generar otro tipo de registro, se puede implementar mediante otro Decorator sin modificar la lógica original de autenticación.
+
+### Diagrama UML Decorator
+
+
+
+### Video Patrón Decorator
+
+
+### Patrón Bridge
+
+El patrón Bridge permite separar una abstracción de su implementación, permitiendo que ambas puedan evolucionar de manera independiente. Es especialmente útil cuando existen dos dimensiones de variación que pueden cambiar por separado y que generarían múltiples combinaciones de clases si permanecieran acopladas.
+
+Después de analizar la arquitectura actual de Smart Grid, se decidió no implementar este patrón debido a que el sistema no presenta actualmente dos jerarquías independientes que necesiten evolucionar de forma separada.
+
+Los componentes implementados, como la autenticación, las facturas, las plantas de energía y la configuración general del sistema, tienen responsabilidades concretas y no requieren separar una abstracción de diferentes implementaciones independientes.
+
+Implementar Bridge en este punto implicaría agregar abstracciones, interfaces e implementaciones adicionales que no solucionarían un problema existente dentro del proyecto.
+
+Por esta razón, se decidió no utilizar este patrón para evitar aumentar innecesariamente la complejidad de la arquitectura.
+
+### Patrón Composite
+
+El patrón Composite permite representar estructuras jerárquicas de objetos en las cuales tanto los elementos individuales como los grupos de elementos pueden ser tratados mediante una misma interfaz.
+
+Un ejemplo común sería una estructura de archivos donde una carpeta puede contener archivos y otras carpetas, permitiendo tratar ambos elementos como componentes de una misma estructura.
+
+En Smart Grid no se presenta actualmente una estructura jerárquica de este tipo. Las entidades y componentes desarrollados, como usuarios, facturas y plantas de energía, funcionan como elementos independientes y no necesitan formar una estructura de árbol donde un objeto contenga otros objetos del mismo tipo.
+
+Por ejemplo, una `PlantaEnergia` no contiene otras plantas que deban ser tratadas como una única estructura, ni una factura contiene otras facturas que necesiten ser administradas mediante una composición jerárquica.
+
+Por esta razón, implementar Composite únicamente para demostrar el patrón generaría clases y estructuras adicionales sin aportar una solución a una necesidad real del sistema.
+
+Se decidió no utilizar este patrón y mantener la arquitectura enfocada en las relaciones y responsabilidades que realmente necesita Smart Grid.
+
+
 # Ejecución del proyecto SmartGrid
 
 ## 1. Requisitos
