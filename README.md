@@ -139,10 +139,6 @@ El flujo de autenticación queda organizado de la siguiente manera:
 
 Esta estructura permite que en el futuro se pueda agregar otra forma de autenticación, como una autenticación mediante un servicio externo, creando un nuevo Adapter que implemente la misma interfaz sin modificar el controlador ni la lógica principal del servicio.
 
-### Diagrama UML Adapter
-
-[UML patron adapter]
-
 ### Patrón Decorator
 
 El patrón Decorator se implementa en Smart Grid como complemento del sistema de autenticación. Su finalidad es permitir agregar una responsabilidad adicional al proceso de inicio de sesión sin modificar directamente la implementación original de la autenticación.
@@ -172,9 +168,9 @@ El flujo queda organizado de la siguiente manera:
 
 De esta manera, si posteriormente se necesita agregar otra responsabilidad al inicio de sesión, como registrar estadísticas o generar otro tipo de registro, se puede implementar mediante otro Decorator sin modificar la lógica original de autenticación.
 
-### Diagrama UML Decorator
+### Diagrama UML Adapter y Decorator
 
-
+![diagrama UML patron adapter y decorator](assets/Adapter&Decorator.jpg)
 
 ### Video Patrón Adapter y Decorator
 
