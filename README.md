@@ -121,13 +121,15 @@ El patrón Adapter se implementa en Smart Grid dentro del módulo de autenticaci
 
 La aplicación define la interfaz `Autenticacion`, la cual establece el contrato mediante el método `autenticar(String username, String password)`. Esta interfaz permite que el sistema trabaje con una abstracción de autenticación sin depender directamente de la forma en que se almacenan o validan los usuarios.
 
-[imagen 1 patron adapter]
+![imagen 1 patron adapter](assets/imagen11.png)
 
 La implementación concreta se encuentra en `AutenticacionLocalAdapter`, ubicada dentro del paquete `adapter`. Esta clase implementa la interfaz `Autenticacion` y adapta el proceso de autenticación local utilizando `UsuarioRepository` y `PasswordEncoder`.
 
+![imagen 2 patron adapter](assets/imagen13.png)
+
 Cuando el usuario intenta iniciar sesión, el Adapter busca el usuario mediante `UsuarioRepository`, verifica que se encuentre activo y posteriormente comprueba la contraseña utilizando BCrypt. Si las credenciales son correctas, retorna el objeto `Usuario`; de lo contrario, retorna un resultado nulo.
 
-[imagen 2 patron adapter]
+![imagen 3 patron adapter](assets/imagen13.png)
 
 Por su parte, `AutenticacionService` trabaja con la abstracción `Autenticacion` y no necesita conocer directamente la implementación utilizada para realizar la autenticación. De esta manera, el servicio puede utilizar el Adapter sin quedar acoplado directamente al repositorio o a la lógica de validación de contraseñas.
 
@@ -141,17 +143,13 @@ Esta estructura permite que en el futuro se pueda agregar otra forma de autentic
 
 [UML patron adapter]
 
-### Video Patrón Adapter
-
-
-
 ### Patrón Decorator
 
 El patrón Decorator se implementa en Smart Grid como complemento del sistema de autenticación. Su finalidad es permitir agregar una responsabilidad adicional al proceso de inicio de sesión sin modificar directamente la implementación original de la autenticación.
 
 Para esto se utiliza la clase abstracta `AutenticacionDecorator`, que implementa la interfaz `Autenticacion` y mantiene una referencia hacia otra implementación de la misma interfaz. Esto permite envolver el comportamiento existente y agregar nuevas funcionalidades.
 
-[imagen 1 patron decorator]
+![imagen 1 patron decorator](assets/imagen14.png)
 
 La implementación concreta es `AuditoriaLoginDecorator`. Esta clase recibe `AutenticacionLocalAdapter` y ejecuta primero el proceso normal de autenticación. Después de obtener el resultado, agrega la funcionalidad de auditoría registrando en consola si el inicio de sesión fue exitoso o fallido.
 
@@ -163,7 +161,8 @@ Si las credenciales son incorrectas, se registra:
 
 `[AUDITORIA] Intento de inicio de sesión fallido: admin`
 
-[imagen 2 patron decorator]
+![imagen 1 patron decorator](assets/imagen15.png)
+
 
 La principal ventaja de esta implementación es que la auditoría se agrega sin modificar `AutenticacionLocalAdapter`. El Decorator funciona como una capa adicional alrededor del proceso original.
 
@@ -177,8 +176,9 @@ De esta manera, si posteriormente se necesita agregar otra responsabilidad al in
 
 
 
-### Video Patrón Decorator
+### Video Patrón Adapter y Decorator
 
+(https://img.youtube.com/vi/SI6Rr6OUCIs/0.jpg)](https://www.youtube.com/watch?v=SI6Rr6OUCIs)
 
 ### Patrón Bridge
 
