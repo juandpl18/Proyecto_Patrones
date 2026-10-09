@@ -276,6 +276,10 @@ La interfaz permite:
 
 La implementación de Facade demuestra cómo una fachada puede ofrecer una interfaz simplificada para acceder a varias funcionalidades de un sistema, manteniendo separadas las responsabilidades de consulta del estado y cálculo de facturación.
 
+### Video Patrón Facade
+
+[![Video patron Adapter y Decorator](https://img.youtube.com/vi/WedsvCXpcdo/0.jpg)](https://www.youtube.com/watch?v=WedsvCXpcdo)
+
 
 # Ejecución del proyecto SmartGrid
 
