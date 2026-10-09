@@ -206,6 +206,8 @@ Se decidió no utilizar este patrón y mantener la arquitectura enfocada en las 
 
 Se implementó el patrón de diseño estructural **Facade** para simplificar el acceso a las funcionalidades principales del sistema SmartGrid. Este patrón proporciona un punto de entrada unificado que coordina las operaciones de diferentes servicios del backend.
 
+![imagen 1 patron facade](assets/imagen16.png)
+
 El frontend desarrollado en Angular realiza una petición HTTP al backend. El controlador recibe la solicitud y delega la operación a `SmartGridFacade`, que coordina las llamadas a los servicios correspondientes.
 
 La fachada reúne los resultados y permite devolver una respuesta estructurada en formato JSON, que Angular utiliza para actualizar la información del panel sin recargar la página.
@@ -219,6 +221,8 @@ La fachada reúne los resultados y permite devolver una respuesta estructurada e
 | GET         | `/api/facade/panel-json` | Devuelve el estado del sistema y los datos de facturación en formato JSON. |
 
 El endpoint `/api/facade/panel-json` acepta los parámetros `tipo` y `consumo`. Si no se especifican, utiliza los valores predeterminados `RESIDENCIAL` y `350`, respectivamente.
+
+![imagen 2 patron facade](assets/imagen17.png)
 
 **Ejemplo de consulta:**
 
@@ -252,6 +256,12 @@ La interfaz permite:
 * Visualizar la tarifa aplicada y el total de la factura.
 * Actualizar los resultados sin recargar la página.
 
+![imagen 3 patron facade](assets/imagen18.png)
+
+![imagen 4 patron facade](assets/imagen19.png)
+
+![imagen 5 patron facade](assets/imagen20.png)
+
 ### Ventajas
 
 * Simplifica la interacción entre el controlador y los servicios del backend.
@@ -259,6 +269,10 @@ La interfaz permite:
 * Reduce el acoplamiento entre los componentes.
 * Facilita el mantenimiento y la integración con el frontend.
 * Permite reutilizar los servicios sin duplicar su lógica de negocio.
+
+### Diagrama UML Facade 
+
+![imagen 6 patron facade](assets/UmlFacade.png)
 
 La implementación de Facade demuestra cómo una fachada puede ofrecer una interfaz simplificada para acceder a varias funcionalidades de un sistema, manteniendo separadas las responsabilidades de consulta del estado y cálculo de facturación.
 
