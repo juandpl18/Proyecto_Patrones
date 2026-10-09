@@ -202,6 +202,97 @@ Por esta razón, implementar Composite únicamente para demostrar el patrón gen
 
 Se decidió no utilizar este patrón y mantener la arquitectura enfocada en las relaciones y responsabilidades que realmente necesita Smart Grid.
 
+## Patrón Facade (Fachada)
+
+### Descripción
+
+Se implementó el patrón de diseño estructural **Facade** para simplificar el acceso a las funcionalidades principales del sistema SmartGrid. Este patrón proporciona un punto de entrada unificado que coordina las operaciones de diferentes servicios del backend.
+
+### Implementación
+
+La implementación se encuentra en el backend desarrollado con Java y Spring Boot.
+
+**Clases principales:**
+
+* `SmartGridFacade`: coordina las operaciones de los servicios y centraliza el acceso a las funcionalidades del panel.
+* `SmartGridFacadeController`: expone los endpoints REST que permiten acceder a las operaciones de la fachada.
+* `SmartGridService`: consulta el estado actual del sistema.
+* `FacturacionService`: obtiene los resultados de facturación según el tipo de factura y el consumo energético.
+* `PanelResumenResponse`: DTO que agrupa el estado del sistema y los datos de la factura en una única respuesta.
+* `FacturaResultado`: DTO que contiene el tipo de factura, el consumo, la tarifa aplicada y el total calculado.
+
+### Funcionamiento
+
+El frontend desarrollado en Angular realiza una petición HTTP al backend. El controlador recibe la solicitud y delega la operación a `SmartGridFacade`, que coordina las llamadas a los servicios correspondientes.
+
+La fachada reúne los resultados y permite devolver una respuesta estructurada en formato JSON, que Angular utiliza para actualizar la información del panel sin recargar la página.
+
+### Endpoints implementados
+
+| Método HTTP | Endpoint                 | Función                                                                    |
+| ----------- | ------------------------ | -------------------------------------------------------------------------- |
+| GET         | `/api/facade/resumen`    | Consulta un resumen del sistema.                                           |
+| GET         | `/api/facade/panel`      | Obtiene la información del panel en formato de texto.                      |
+| GET         | `/api/facade/panel-json` | Devuelve el estado del sistema y los datos de facturación en formato JSON. |
+
+El endpoint `/api/facade/panel-json` acepta los parámetros `tipo` y `consumo`. Si no se especifican, utiliza los valores predeterminados `RESIDENCIAL` y `350`, respectivamente.
+
+**Ejemplo de consulta:**
+
+```http
+GET http://localhost:8080/api/facade/panel-json?tipo=RESIDENCIAL&consumo=350
+```
+
+**Respuesta esperada:**
+
+```json
+{
+  "estadoSistema": "SmartGrid está activo",
+  "factura": {
+    "tipoFactura": "RESIDENCIAL",
+    "consumo": 350.0,
+    "tarifa": 500.0,
+    "total": 175000.0
+  }
+}
+```
+
+### Integración con Angular
+
+Se desarrolló un panel de control que consume el endpoint `/api/facade/panel-json` mediante `HttpClient`.
+
+La interfaz permite:
+
+* Consultar el estado del sistema SmartGrid.
+* Seleccionar facturación residencial o comercial.
+* Ingresar el consumo energético en kWh.
+* Visualizar la tarifa aplicada y el total de la factura.
+* Actualizar los resultados sin recargar la página.
+
+### Pruebas realizadas
+
+Se verificó la comunicación entre Angular y Spring Boot, comprobando que el backend devuelve los datos esperados y que el frontend los presenta correctamente.
+
+Para un consumo de 350 kWh se obtuvieron los siguientes resultados:
+
+| Tipo de factura | Tarifa por kWh |    Total |
+| --------------- | -------------: | -------: |
+| Residencial     |           $500 | $175.000 |
+| Comercial       |           $700 | $245.000 |
+
+### Ventajas
+
+* Simplifica la interacción entre el controlador y los servicios del backend.
+* Centraliza la coordinación de las operaciones relacionadas con el panel.
+* Reduce el acoplamiento entre los componentes.
+* Facilita el mantenimiento y la integración con el frontend.
+* Permite reutilizar los servicios sin duplicar su lógica de negocio.
+
+### Objetivo del patrón en SmartGrid
+
+La implementación de Facade demuestra cómo una fachada puede ofrecer una interfaz simplificada para acceder a varias funcionalidades de un sistema, manteniendo separadas las responsabilidades de consulta del estado y cálculo de facturación.
+
+
 
 # Ejecución del proyecto SmartGrid
 
