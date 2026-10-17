@@ -1,0 +1,184 @@
+<div class="app-shell">
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-icon">⚡</div>
+      <div>
+        <h2>SmartGrid</h2>
+        <p>Gestión energética</p>
+      </div>
+    </div>
+
+    <div class="menu-label">PRINCIPAL</div>
+    <div class="menu-item active">▦ &nbsp; Panel de control</div>
+    <div class="menu-item">ϟ &nbsp; Facturación</div>
+
+    <div class="sidebar-footer">
+      <div class="status-dot"></div>
+      Sistema de monitoreo
+      <p>Backend Spring Boot</p>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">SMARTGRID / GENERAL</p>
+        <h1>Panel de control</h1>
+        <p class="subtitle">
+          Consulta el estado del sistema y genera facturas energéticas.
+        </p>
+      </div>
+
+      <div class="connection">
+        <span class="status-dot"></span>
+        Conexión local
+      </div>
+    </header>
+
+    <section class="welcome">
+      <div>
+        <p class="welcome-label">CENTRO DE OPERACIONES</p>
+        <h2>Control energético simplificado</h2>
+        <p>Información obtenida desde el backend de SmartGrid.</p>
+      </div>
+      <div class="welcome-icon">ϟ</div>
+    </section>
+
+    <section class="section-heading">
+      <div>
+        <h2>Resumen del sistema</h2>
+        <p>Datos de la consulta actual</p>
+      </div>
+      <button class="refresh-button"
+              (click)="consultar()"
+              [disabled]="cargando">
+        {{ cargando ? 'Consultando...' : '↻ Actualizar datos' }}
+      </button>
+    </section>
+
+    <section class="metrics">
+      <article class="metric-card">
+        <div class="metric-top">
+          <span>Estado del sistema</span>
+          <span class="metric-icon green">●</span>
+        </div>
+        <h3>{{ datos?.estadoSistema ?? 'Sin consultar' }}</h3>
+        <p>Estado reportado por Spring Boot</p>
+      </article>
+
+      <article class="metric-card">
+        <div class="metric-top">
+          <span>Consumo facturado</span>
+          <span class="metric-icon blue">ϟ</span>
+        </div>
+        <h3>
+          {{ datos ? (datos.factura.consumo | number:'1.0-2') + ' kWh' : '—' }}
+        </h3>
+        <p>Consumo ingresado para la factura</p>
+      </article>
+
+      <article class="metric-card">
+        <div class="metric-top">
+          <span>Tarifa por kWh</span>
+          <span class="metric-icon purple">$</span>
+        </div>
+        <h3>
+          {{ datos ? (datos.factura.tarifa | currency:'COP':'symbol':'1.0-0') : '—' }}
+        </h3>
+        <p>Tarifa aplicada por el backend</p>
+      </article>
+
+      <article class="metric-card featured">
+        <div class="metric-top">
+          <span>Total de la factura</span>
+          <span class="metric-icon white">$</span>
+        </div>
+        <h3>
+          {{ datos ? (datos.factura.total | currency:'COP':'symbol':'1.0-0') : '—' }}
+        </h3>
+        <p>Importe calculado por Factory Method</p>
+      </article>
+    </section>
+
+    <section class="content-grid">
+      <article class="panel">
+        <div class="panel-heading">
+          <div>
+            <h2>Generar factura</h2>
+            <p>Consulta el cálculo de consumo energético</p>
+          </div>
+          <span class="panel-symbol">▤</span>
+        </div>
+
+        <form (ngSubmit)="consultar()">
+          <label for="tipo">Tipo de facturación</label>
+          <select id="tipo" name="tipo" [(ngModel)]="tipo">
+            <option value="RESIDENCIAL">Residencial</option>
+            <option value="COMERCIAL">Comercial</option>
+          </select>
+
+          <label for="consumo">Consumo energético (kWh)</label>
+          <input
+            id="consumo"
+            name="consumo"
+            type="number"
+            min="0"
+            step="any"
+            [(ngModel)]="consumo"
+            required
+          />
+
+          <button class="primary-button"
+                  type="submit"
+                  [disabled]="cargando">
+            {{ cargando ? 'Procesando...' : 'Calcular factura →' }}
+          </button>
+        </form>
+
+        <p class="error-message" *ngIf="error">{{ error }}</p>
+      </article>
+
+      <article class="panel invoice-panel">
+        <div class="panel-heading">
+          <div>
+            <h2>Detalle de facturación</h2>
+            <p>Resultado devuelto por el backend</p>
+          </div>
+          <span class="invoice-badge">FACTURA</span>
+        </div>
+
+        <div *ngIf="datos; else sinDatos">
+          <div class="invoice-type">
+            {{ datos.factura.tipoFactura }}
+          </div>
+
+          <div class="invoice-row">
+            <span>Consumo registrado</span>
+            <strong>{{ datos.factura.consumo | number:'1.0-2' }} kWh</strong>
+          </div>
+
+          <div class="invoice-row">
+            <span>Tarifa aplicada</span>
+            <strong>{{ datos.factura.tarifa | currency:'COP':'symbol':'1.0-0' }}/kWh</strong>
+          </div>
+
+          <div class="invoice-total">
+            <span>Total a pagar</span>
+            <strong>{{ datos.factura.total | currency:'COP':'symbol':'1.0-0' }}</strong>
+          </div>
+        </div>
+
+        <ng-template #sinDatos>
+          <p class="empty-state">
+            Completa la consulta para visualizar el detalle de tu factura.
+          </p>
+        </ng-template>
+      </article>
+    </section>
+
+    <footer>
+      SmartGrid · Proyecto académico de gestión energética
+      <span>Angular + Spring Boot</span>
+    </footer>
+  </main>
+</div>
