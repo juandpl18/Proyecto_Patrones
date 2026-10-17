@@ -1,11 +1,10 @@
+
 package com.smartgrid.smartgrid.controller;
 
 import com.smartgrid.smartgrid.builder.PlantaEnergia;
 import com.smartgrid.smartgrid.model.Usuario;
 import com.smartgrid.smartgrid.repository.UsuarioRepository;
-import com.smartgrid.smartgrid.model.Rol;
-import com.smartgrid.smartgrid.service.AutorizacionService;
-import com.smartgrid.smartgrid.service.PlantaEnergiaService;
+import com.smartgrid.smartgrid.service.PlantaEnergiaProxy;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -13,18 +12,15 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin(origins = "*")
 public class PlantaEnergiaController {
 
-    private final PlantaEnergiaService plantaEnergiaService;
+    private final PlantaEnergiaProxy plantaEnergiaProxy;
     private final UsuarioRepository usuarioRepository;
-    private final AutorizacionService autorizacionService;
 
     public PlantaEnergiaController(
-            PlantaEnergiaService plantaEnergiaService,
-            UsuarioRepository usuarioRepository,
-            AutorizacionService autorizacionService) {
+            PlantaEnergiaProxy plantaEnergiaProxy,
+            UsuarioRepository usuarioRepository) {
 
-        this.plantaEnergiaService = plantaEnergiaService;
+        this.plantaEnergiaProxy = plantaEnergiaProxy;
         this.usuarioRepository = usuarioRepository;
-        this.autorizacionService = autorizacionService;
     }
 
     @PostMapping("/crear")
@@ -41,9 +37,8 @@ public class PlantaEnergiaController {
                 .orElseThrow(() ->
                         new RuntimeException("Usuario no encontrado"));
 
-        autorizacionService.validarRol(usuario, Rol.ADMIN);
-
-        return plantaEnergiaService.construirPlanta(
+        return plantaEnergiaProxy.construirPlanta(
+                usuario,
                 nombre,
                 fuente,
                 capacidad,

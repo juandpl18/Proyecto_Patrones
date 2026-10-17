@@ -23,4 +23,17 @@ public class FacturacionService {
                 .map(factory -> factory.generar(consumo))
                 .orElse("Tipo de factura no válido");
     }
+
+    public com.smartgrid.smartgrid.dto.FacturaResultado obtenerResultado(
+            String tipo, double consumo) {
+
+        return factories.stream()
+                .filter(factory ->
+                        factory.getTipo().equalsIgnoreCase(tipo))
+                .findFirst()
+                .map(factory -> factory.generarResultado(consumo))
+                .orElseThrow(() ->
+                        new IllegalArgumentException(
+                                "Tipo de factura no válido"));
+    }
 }

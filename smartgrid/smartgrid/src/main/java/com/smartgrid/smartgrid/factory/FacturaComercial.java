@@ -1,17 +1,22 @@
+
 package com.smartgrid.smartgrid.factory;
+
+import com.smartgrid.smartgrid.dto.FacturaResultado;
 
 public class FacturaComercial implements Factura {
 
     private static final double TARIFA = 700;
 
     @Override
-    public String generarFactura(double consumo) {
+    public FacturaResultado calcular(double consumo) {
 
         double total = consumo * TARIFA;
 
-        return "FACTURA COMERCIAL\n" +
-                "Consumo: " + consumo + " kWh\n" +
-                "Tarifa: $" + TARIFA + " por kWh\n" +
-                "Total: $" + total;
+        return new FacturaResultado(
+                "COMERCIAL",
+                consumo,
+                TARIFA,
+                total
+        );
     }
 }
