@@ -384,9 +384,13 @@ En SmartGrid, Flyweight se utiliza para compartir la información común de las 
 - `PlantaEnergia`: integra Flyweight con el patrón Builder y mantiene una referencia al objeto compartido de su fuente energética.
 - `FlyweightTest`: comprueba que dos plantas solares reutilizan la misma instancia de `FuenteEnergiaFlyweight`.
 
+![imagen 1 patron Flyweight](assets/imagen21.png)
+
 ### Funcionamiento
 
 Cuando se construye una planta, `PlantaEnergia` solicita a `FuenteEnergiaFactory` el objeto correspondiente a su fuente energética. Si ya existe, se reutiliza; de lo contrario, se crea y se almacena para futuras solicitudes.
+
+![imagen 2 patron Flyweight](assets/imagen22.png)
 
 La comparación mediante `==` en la prueba automatizada permite verificar que dos plantas solares hacen referencia al mismo objeto en memoria.
 
@@ -394,7 +398,14 @@ La comparación mediante `==` en la prueba automatizada permite verificar que do
 
 La prueba `FlyweightTest` finalizó correctamente con el resultado **Test passed**, confirmando la reutilización de la instancia para dos plantas solares.
 
+![imagen 3 patron Flyweight](assets/imagen23.png)
+
 **Alcance actual:** las plantas se construyen en memoria y todavía no se persisten en la base de datos.
+
+### Diagrama UML Flyweight
+
+![diagrama UML Flyweight](assets/UmlFlyweight.png)
+
 
 ---
 
@@ -408,12 +419,15 @@ El patrón estructural Proxy proporciona un intermediario que controla el acceso
 
 En SmartGrid, Proxy controla el acceso a la construcción de plantas energéticas según el rol del usuario. Solamente los usuarios activos con el rol `ADMIN` pueden ejecutar esta operación.
 
+![imagen 1 patron Proxy](assets/imagen24.png)
+
 **Clases involucradas:**
 
 - `PlantaEnergiaController`: recibe la solicitud HTTP y busca al usuario en la base de datos mediante `UsuarioRepository`.
 - `PlantaEnergiaProxy`: actúa como intermediario, valida los permisos del usuario y delega la operación al servicio real.
 - `AutorizacionService`: comprueba que el usuario esté activo y tenga el rol requerido. Si no cumple las condiciones, genera una respuesta HTTP `403 Forbidden`.
 - `PlantaEnergiaService`: construye la planta utilizando el patrón Builder.
+
 
 ### Funcionamiento
 
@@ -424,6 +438,8 @@ En SmartGrid, Proxy controla el acceso a la construcción de plantas energética
 5. Si el usuario está autorizado, el Proxy delega la construcción a `PlantaEnergiaService`.
 6. Si el usuario no está autorizado o está inactivo, la operación se rechaza con HTTP `403 Forbidden`.
 
+![imagen 2 patron Proxy](assets/imagen25.png)
+
 ### Pruebas realizadas
 
 | Usuario | Resultado | Descripción |
@@ -431,8 +447,11 @@ En SmartGrid, Proxy controla el acceso a la construcción de plantas energética
 | `admin` | HTTP 200 OK | Se permite construir la planta. |
 | `operador` | HTTP 403 Forbidden | Se rechaza la operación por falta de autorización. |
 
+![imagen 3 patron Proxy](assets/imagen26.png)
+
 **Alcance actual:** Proxy controla el acceso a la construcción de plantas, pero estas todavía no se guardan en PostgreSQL. La autorización se basa en el usuario y su rol recuperados de la base de datos; no representa por sí sola un sistema completo de autenticación y seguridad HTTP.
 
+![UML patron Proxy](assets/UmlProxy.png)
 
 # Ejecución del proyecto SmartGrid
 
