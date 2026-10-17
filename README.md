@@ -47,7 +47,7 @@ Desarrollar progresivamente un sistema de gestión de redes eléctricas intelige
 A lo largo del proyecto se incorporan patrones de diseño seleccionados de acuerdo con las necesidades de SmartGrid. Cada implementación incluye una descripción de su propósito, su aplicación dentro del sistema y los componentes principales que participan en ella.
 
 
-## 1. Patrón Singleton
+## Patrón Singleton
 
 ### Propósito
 
@@ -75,7 +75,7 @@ En la implementación del patrón se utiliza una instancia compartida, un constr
 
 ---
 
-## 2. Patrón Factory Method
+## Patrón Factory Method
 
 ### Propósito
 
@@ -136,7 +136,7 @@ La incorporación de un nuevo tipo de factura puede realizarse mediante una nuev
 
 ---
 
-## 3. Patrón Builder
+## Patrón Builder
 
 ### Propósito
 
@@ -189,89 +189,7 @@ Builder facilita la construcción de plantas con diferentes configuraciones sin 
 
 ---
 
-## 4. Patrón Flyweight
-
-### Propósito
-
-El patrón estructural Flyweight permite compartir objetos que contienen información común entre varias instancias, reduciendo la duplicación de datos y el consumo de memoria cuando existen numerosos objetos similares.
-
-### Implementación en SmartGrid
-
-En SmartGrid, Flyweight se utiliza para compartir información común de las fuentes energéticas asociadas a las plantas. Por ejemplo, distintas plantas solares pueden compartir los datos descriptivos de la fuente solar, aunque cada planta tenga su propio nombre, capacidad y ubicación.
-
-### Clases involucradas
-
-- `FuenteEnergiaFlyweight`: contiene el tipo, la descripción y las características de una fuente energética.
-- `FuenteEnergiaFactory`: administra las instancias compartidas mediante un `HashMap` y reutiliza los objetos existentes para un mismo tipo de fuente.
-- `PlantaEnergia`: conserva los datos particulares de cada planta y una referencia al objeto compartido.
-- `FlyweightTest`: verifica que dos plantas solares reutilicen la misma instancia.
-
-### Funcionamiento
-
-1. Se construye una planta mediante `PlantaEnergiaBuilder`.
-2. Durante la construcción, `PlantaEnergia` solicita a `FuenteEnergiaFactory` el objeto correspondiente al tipo de fuente.
-3. Si el objeto ya existe, la fábrica lo reutiliza; de lo contrario, crea uno nuevo y lo almacena.
-4. Las plantas que utilizan el mismo tipo de fuente pueden compartir la misma instancia de `FuenteEnergiaFlyweight`.
-
-![Diagrama UML del patrón Flyweight](assets/uml-flyweight.png)
-
-### Prueba realizada
-
-La prueba automatizada `FlyweightTest` finalizó con el resultado **Test passed**. La prueba comprueba que dos plantas solares diferentes hacen referencia al mismo objeto compartido en memoria.
-
-### Ventajas
-
-Flyweight separa los datos comunes de una fuente energética de los datos particulares de cada planta. Esta estructura permite reutilizar información compartida y ofrece una base para ampliar la gestión de fuentes energéticas.
-
-**Alcance actual:** las plantas se construyen en memoria y no se guardan en PostgreSQL. La reutilización se realiza durante la ejecución de la aplicación.
-
----
-
-## 5. Patrón Proxy
-
-### Propósito
-
-El patrón estructural Proxy proporciona un intermediario que controla el acceso a un servicio u objeto real antes de delegarle una operación. Puede utilizarse para incorporar controles de acceso y otras validaciones sin concentrar toda esa lógica en el servicio de negocio.
-
-### Implementación en SmartGrid
-
-En SmartGrid, Proxy controla el acceso a la construcción de plantas energéticas. La operación requiere que el usuario exista, esté activo y tenga el rol `ADMIN`.
-
-### Clases involucradas
-
-- `PlantaEnergiaController`: recibe la solicitud HTTP y obtiene el usuario mediante `UsuarioRepository`.
-- `PlantaEnergiaProxy`: actúa como intermediario y valida los permisos antes de delegar la operación.
-- `AutorizacionService`: verifica el estado del usuario y el rol requerido. Si la validación falla, lanza una excepción que Spring traduce en una respuesta HTTP `403 Forbidden`.
-- `PlantaEnergiaService`: ejecuta la construcción de la planta mediante Builder.
-- `Usuario` y `Rol`: representan al usuario y los roles empleados en la validación.
-
-### Funcionamiento
-
-1. El cliente envía una solicitud al endpoint `/api/planta/crear`, incluyendo el nombre de usuario y los datos de la planta.
-2. El controlador busca al usuario en la base de datos.
-3. El controlador delega la operación a `PlantaEnergiaProxy`.
-4. El Proxy solicita a `AutorizacionService` que valide el rol `ADMIN`.
-5. Si el usuario está activo y autorizado, el Proxy delega la construcción a `PlantaEnergiaService`.
-6. Si el usuario no cumple los requisitos, se rechaza la operación con HTTP `403 Forbidden`.
-
-![Diagrama UML del patrón Proxy](assets/uml-proxy.png)
-
-### Pruebas realizadas
-
-| Caso de prueba | Resultado esperado | Resultado obtenido |
-|---|---|---|
-| Usuario `admin` | HTTP 200 OK | La planta se construye correctamente. |
-| Usuario `operador` | HTTP 403 Forbidden | La operación se rechaza por falta de permisos. |
-
-### Ventajas
-
-Proxy separa el control de acceso de la construcción de la planta. De esta forma, el servicio real conserva su responsabilidad de construir el objeto, mientras que el intermediario controla si la operación puede ejecutarse.
-
-**Alcance actual:** Proxy protege la operación de construcción de plantas. Como las plantas todavía no se persisten en PostgreSQL, no se están controlando operaciones de creación, actualización o eliminación de registros almacenados. Además, la autorización por rol no sustituye un sistema completo de autenticación y seguridad HTTP.
-
----
-
-## 6. Patrones evaluados y no implementados
+## Patrones evaluados y no implementados
 
 No todos los patrones de diseño aportan beneficios a todos los sistemas. En SmartGrid también se han evaluado patrones que, por las necesidades actuales del proyecto, no se han incorporado a la implementación.
 
