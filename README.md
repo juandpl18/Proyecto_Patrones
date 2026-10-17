@@ -412,6 +412,11 @@ La prueba `FlyweightTest` finalizó correctamente con el resultado **Test passed
 
 ![diagrama UML Flyweight](assets/UmlFlyweight.png)
 
+---
+
+### Video patrón Factory Method
+
+[![Video del patrón Factory Method](https://img.youtube.com/vi/Ty08ICiVTJ0/0.jpg)](https://www.youtube.com/watch?v=Ty08ICiVTJ0)
 
 ---
 
@@ -463,6 +468,11 @@ En SmartGrid, Proxy controla el acceso a la construcción de plantas energética
 
 ---
 
+### Video patrón Proxy
+
+[![Video del patrón Factory Method](https://img.youtube.com/vi/dnaba2vTqcw/0.jpg)](https://www.youtube.com/watch?v=dnaba2vTqcw)
+
+---
 
 # Ejecución del proyecto SmartGrid
 
