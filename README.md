@@ -69,7 +69,7 @@ En la implementación del patrón se utiliza una instancia compartida, un constr
 
 ![Diagrama UML del patrón Singleton](assets/singleton.png)
 
-### Evidencia audiovisual
+### Video Patrón Singleton
 
 [![Video del patrón Singleton](https://img.youtube.com/vi/1u5A9hnG09Y/0.jpg)](https://www.youtube.com/watch?v=1u5A9hnG09Y)
 
@@ -130,7 +130,7 @@ La incorporación de un nuevo tipo de factura puede realizarse mediante una nuev
 
 ![Diagrama UML de Factory Method](assets/FactoryMethod.png)
 
-### Evidencia audiovisual
+### Video patrón Factory Method
 
 [![Video del patrón Factory Method](https://img.youtube.com/vi/Ty08ICiVTJ0/0.jpg)](https://www.youtube.com/watch?v=Ty08ICiVTJ0)
 
@@ -183,7 +183,7 @@ Builder facilita la construcción de plantas con diferentes configuraciones sin 
 
 ![Diagrama UML del patrón Builder](assets/builder.png)
 
-### Evidencia audiovisual
+### Video patrón Builder
 
 [![Video del patrón Builder](https://img.youtube.com/vi/ghf-MfEC9mA/0.jpg)](https://www.youtube.com/watch?v=ghf-MfEC9mA)
 
@@ -262,6 +262,9 @@ De esta manera, si posteriormente se necesita agregar otra responsabilidad al in
 ### Video Patrón Adapter y Decorator
 
 [![Video patron Adapter y Decorator](https://img.youtube.com/vi/SI6Rr6OUCIs/0.jpg)](https://www.youtube.com/watch?v=SI6Rr6OUCIs)
+
+---
+
 
 ### Patrón Bridge
 
@@ -367,6 +370,9 @@ La implementación de Facade demuestra cómo una fachada puede ofrecer una inter
 
 [![Video patron Adapter y Decorator](https://img.youtube.com/vi/WedsvCXpcdo/0.jpg)](https://www.youtube.com/watch?v=WedsvCXpcdo)
 
+---
+
+
 ## Patrón Flyweight
 
 ### Propósito
@@ -451,7 +457,12 @@ En SmartGrid, Proxy controla el acceso a la construcción de plantas energética
 
 **Alcance actual:** Proxy controla el acceso a la construcción de plantas, pero estas todavía no se guardan en PostgreSQL. La autorización se basa en el usuario y su rol recuperados de la base de datos; no representa por sí sola un sistema completo de autenticación y seguridad HTTP.
 
+### Diagrama UML Proxy
+
 ![UML patron Proxy](assets/UmlProxy.png)
+
+---
+
 
 # Ejecución del proyecto SmartGrid
 
