@@ -189,7 +189,6 @@ Builder facilita la construcción de plantas con diferentes configuraciones sin 
 
 ---
 
-## Patrones evaluados y no implementados
 
 No todos los patrones de diseño aportan beneficios a todos los sistemas. En SmartGrid también se han evaluado patrones que, por las necesidades actuales del proyecto, no se han incorporado a la implementación.
 
