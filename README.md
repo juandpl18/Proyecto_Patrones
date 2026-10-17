@@ -1,119 +1,289 @@
-# Proyecto_Patrones
-Los patrones de software son soluciones reutilizables para problemas comunes que aparecen durante el diseño y desarrollo de aplicaciones. No representan código listo para copiar y pegar, sino que funcionan como guías o modelos de diseño que permiten organizar el software de una manera más eficiente, mantenible y escalable.
+# Proyecto de Patrones de Diseño de Software
 
-La implementación de patrones de software permite mejorar la organización del código, resolver problemas recurrentes y facilitar el mantenimiento y la evolución de los sistemas. Por esta razón, en este proyecto se implementarán diferentes patrones de software sobre el proyecto Smart Grid, con el propósito de mejorar progresivamente su estructura, calidad y organización.
+Los patrones de diseño de software son soluciones reutilizables que permiten abordar problemas recurrentes durante el diseño y desarrollo de aplicaciones. No constituyen código listo para copiar y pegar, sino modelos de diseño que orientan la organización de las clases, la distribución de responsabilidades y la interacción entre los componentes de un sistema.
 
-> **Nota:** Este proyecto se manejara por semanas dentro de cada directorio/carpeta nombradas por su correspondiente semana se irán agregando los avances obtenidos dejando la constancia del trabajo realizado con anterioridad. El proyecto completo se encontrara en la carpeta `smartgrid/smartgrid` y la caorrespondiente base de datos en `Base de datos`
+La aplicación adecuada de estos patrones contribuye a mejorar la mantenibilidad, la reutilización del código, la flexibilidad y la capacidad de evolución del software. Sin embargo, cada patrón debe seleccionarse de acuerdo con las necesidades del sistema, evitando introducir complejidad innecesaria.
 
-## Smart Grid
+Este proyecto tiene como propósito estudiar e implementar progresivamente diferentes patrones de diseño sobre **SmartGrid**, un sistema de gestión de redes eléctricas inteligentes. A través de estas implementaciones se busca comprender su funcionamiento, identificar los problemas que resuelven y evaluar cómo contribuyen a la estructura y organización de una aplicación.
 
-Smart Grid es un sistema de gestión de redes eléctricas inteligentes enfocado en el monitoreo y administración del consumo energético. El proyecto será actualizado progresivamente mediante la implementación de diferentes patrones de software, buscando mejorar la calidad del código, reducir el acoplamiento entre sus componentes y facilitar su mantenimiento y extensión. 
+## Organización del proyecto
 
-> **Nota:** Los pasos e instrucciones para descargar y ejecutar Smartgrid se encuentran al final del documento 
+El desarrollo se organiza por semanas. Cada directorio correspondiente a una semana contiene los avances y evidencias del trabajo realizado, permitiendo conservar un registro de la evolución del proyecto.
+
+- **Proyecto principal:** `smartgrid/smartgrid`
+- **Base de datos:** carpeta `Base de datos`
+- **Documentación y evidencias:** directorios semanales y recursos incluidos en el repositorio.
+
+Los patrones se incorporan de manera progresiva sobre el proyecto principal, procurando conservar las funcionalidades existentes y mantener una estructura organizada.
+
+## SmartGrid
+
+SmartGrid es un sistema de gestión de redes eléctricas inteligentes orientado a la administración de la infraestructura energética, la gestión del consumo y la integración de fuentes de energía renovable.
+
+El proyecto se desarrolla progresivamente mediante la implementación de patrones de diseño que permiten organizar las responsabilidades del backend, reducir el acoplamiento entre componentes y facilitar el mantenimiento y la incorporación de nuevas funcionalidades.
+
+La aplicación cuenta con un backend desarrollado con **Java y Spring Boot**, una base de datos **PostgreSQL** y una interfaz web desarrollada con **Angular**.
+
+Las funcionalidades y los patrones implementados se documentan a lo largo de este README, incluyendo sus objetivos, las clases involucradas, los diagramas UML y las evidencias de funcionamiento disponibles.
+
+> **Nota:** las instrucciones para descargar, configurar y ejecutar SmartGrid se encuentran al final de este documento.
 
 ### Objetivo general
-Desarrollar un sistema de gestión de redes inteligentes (Smart Grid) que permita monitorear y administrar el consumo energético en tiempo real, optimizar la distribución de la energía mediante el balanceo de cargas, integrar fuentes de energía renovable y gestionar un sistema de facturación dinámica.
+
+Desarrollar progresivamente un sistema de gestión de redes eléctricas inteligentes que permita administrar información relacionada con el consumo energético, la infraestructura de generación, las fuentes de energía renovable y la facturación, utilizando patrones de diseño de software para mejorar la organización, mantenibilidad y extensibilidad de la aplicación.
 
 ### Objetivos específicos
-* Implementar un sistema de monitoreo del consumo energético en tiempo real que permita visualizar y registrar el uso de energía de los usuarios 
 
-* Desarrollar mecanismos de balanceo de carga y gestión de picos de consumo
+- Diseñar mecanismos para consultar y visualizar información relacionada con el consumo energético.
+- Establecer una estructura que permita incorporar funcionalidades de gestión de la demanda y balanceo de cargas.
+- Modelar la infraestructura de generación eléctrica y facilitar la representación de fuentes renovables, como la solar y la eólica.
+- Implementar mecanismos de facturación que permitan calcular los costos del consumo de acuerdo con las tarifas y los parámetros definidos.
+- Desarrollar un panel web para consultar información y funcionalidades disponibles en el sistema.
+- Aplicar y documentar patrones de diseño que favorezcan la separación de responsabilidades, la reutilización del código y la evolución de la arquitectura.
+- Verificar las implementaciones mediante pruebas y solicitudes a los endpoints REST, documentando los resultados obtenidos.
 
-* Integrar fuentes de energía renovable como energía solar o eólica, permitiendo registrar y gestionar la energía generada y su incorporación a la red.
+## Patrones de diseño implementados
 
-* Diseñar un sistema de facturación dinámica que permita calcular el costo del consumo energético de acuerdo con variables como el horario, la demanda y el consumo registrado.
+A lo largo del proyecto se incorporan patrones de diseño seleccionados de acuerdo con las necesidades de SmartGrid. Cada implementación incluye una descripción de su propósito, su aplicación dentro del sistema y los componentes principales que participan en ella.
 
-* Desarrollar un panel de gestión y visualización que permita consultar información sobre consumo, generación, demanda, costos y estado general de la red.
 
-### Patron Singleton
+## 1. Patrón Singleton
 
-El sistema implementará el patrón de diseño Singleton, utilizado para garantizar que determinados componentes de la Smart Grid cuenten con una única instancia y puedan ser gestionados de manera centralizada.
+### Propósito
 
-En nuestro proyecto Smart Grid lo utilizamos en la clase SmartGridConfig, porque queremos tener una única configuración general del sistema. Por ejemplo, el nombre del sistema, si está activo o inactivo y posteriormente parámetros como la tarifa eléctrica o los límites de consumo
+El patrón creacional Singleton permite controlar la creación de instancias de una clase cuando se requiere un único objeto compartido para una responsabilidad determinada. Su objetivo es centralizar el acceso a ese objeto y evitar la creación de múltiples instancias independientes.
 
-![imagen 1 SmartGridConfig](assets/imagen1.png)
+### Implementación en SmartGrid
 
-La parte del código que se ve afectada principalmente es la clase SmartGridConfig. Ahí se implementa el Singleton mediante una variable estática que almacena la instancia, un constructor privado que evita crear objetos desde otras clases y el método getInstancia(), que permite obtener siempre la misma instancia.
+En SmartGrid, este patrón se aplica a la clase `SmartGridConfig`, encargada de mantener la configuración general del sistema, como su nombre y su estado de activación.
 
-![imagen 2 patron singleton](assets/imagen2.png)
+La clase proporciona un punto de acceso a la configuración para que los componentes que la necesitan consulten o modifiquen sus valores de forma centralizada.
 
-### Diagrama UML Singleton
+![Implementación de SmartGridConfig](assets/imagen1.png)
 
-![UML patron singleton](assets/singleton.png)
+En la implementación del patrón se utiliza una instancia compartida, un constructor privado y el método `getInstancia()`, que permite obtener esa instancia sin crear objetos nuevos desde otras clases.
 
-### Video Patrón Singleton
-[![Video patron singleton](https://img.youtube.com/vi/1u5A9hnG09Y/0.jpg)](https://www.youtube.com/watch?v=1u5A9hnG09Y)
+![Implementación del patrón Singleton](assets/imagen2.png)
 
-### Patron factory method
+### Diagrama UML
 
-El segundo patrón que implementamos en nuestro proyecto SmartGrid es el patrón Factory Method, aplicado dentro del módulo de facturación. Toda la estructura de este patrón se encuentra organizada dentro del paquete com.smartgrid.smartgrid.factory, comunicándose directamente con la capa de service y controller.
+![Diagrama UML del patrón Singleton](assets/singleton.png)
 
-La idea principal es que SmartGrid pueda manejar diferentes tipos de facturas (como residenciales y comerciales) con sus respectivas formas de calcular tarifas, sin acoplar la lógica de negocio a clases concretas.
+### Evidencia audiovisual
 
-Para implementar el patrón, primero definimos la interfaz Factura dentro de la carpeta factory, la cual actúa como el Producto Abstracto estableciendo el contrato general mediante el método generarFactura().
+[![Video del patrón Singleton](https://img.youtube.com/vi/1u5A9hnG09Y/0.jpg)](https://www.youtube.com/watch?v=1u5A9hnG09Y)
 
-![imagen 1 factory method](assets/imagen3.png)
+---
 
-A partir de esta interfaz, creamos FacturaResidencial y FacturaComercial, que representan los Productos Concretos. En estas clases se implementa la lógica específica de tarifa y formato según la categoría del usuario.
+## 2. Patrón Factory Method
 
-![imagen 2 factory method](assets/imagen4.png)
+### Propósito
 
-![imagen 3 factory method](assets/imagen5.png)
+El patrón creacional Factory Method define un método para crear objetos y delega a las implementaciones concretas la decisión de qué tipo de objeto instanciar. Esto permite separar la creación de los objetos de la lógica que los utiliza.
 
-Luego, creamos la clase abstracta FacturaFactory, que cumple el rol de Creador Abstracto. Aquí se encuentra el núcleo del patrón: el método abstracto crearFactura(), que es formalmente el Factory Method.
+### Implementación en SmartGrid
 
-![imagen 4 factory method](assets/imagen6.png)
+En SmartGrid, Factory Method se utiliza en el módulo de facturación para generar facturas de diferentes categorías de clientes, como residenciales y comerciales.
 
-Este método define qué objeto de tipo Factura debe ser creado, pero deja que las clases hijas (Creadores Concretos) decidan exactamente qué implementación instanciar. Por ejemplo, tenemos FacturaResidencialFactory, que cuando ejecuta crearFactura() retorna una FacturaResidencial, y tenemos FacturaComercialFactory, que retorna una FacturaComercial.
+La implementación se encuentra organizada en el paquete `com.smartgrid.smartgrid.factory` y se integra con las capas de servicio y controlador.
 
-Por su parte, en el servicio FacturacionService (ubicado en el paquete service) no creamos directamente las facturas residenciales o comerciales. El servicio opera como cliente del patrón trabajando con la abstracción FacturaFactory mediante la inyección de dependencias de Spring.
+### Clases involucradas
 
-![imagen 5 factory method](assets/imagen7.png)
+- `Factura`: interfaz que define el contrato común para los diferentes tipos de factura.
+- `FacturaResidencial` y `FacturaComercial`: productos concretos que implementan el comportamiento específico de cada categoría.
+- `FacturaFactory`: creador abstracto que declara el método `crearFactura()`.
+- `FacturaResidencialFactory` y `FacturaComercialFactory`: creadores concretos que deciden qué implementación de `Factura` instanciar.
+- `FacturacionService`: utiliza la fábrica correspondiente para generar la factura y calcular el valor del consumo.
+- `FacturacionController`: expone la funcionalidad mediante el endpoint REST `/api/facturacion`.
 
-Esta lógica se conecta con el exterior a través de FacturacionController (en el paquete controller), el cual expone el endpoint REST /api/facturacion. Al ingresar una petición HTTP especificando el tipo de cliente y el consumo, el controlador transfiere los datos a FacturacionService, el cual busca la fábrica correspondiente, ejecuta su Factory Method y retorna el cálculo en formato JSON.
+La interfaz `Factura` establece el contrato común del producto.
 
-De esta manera, si en el futuro necesitamos agregar una factura industrial, simplemente creamos FacturaIndustrial y FacturaIndustrialFactory dentro del paquete factory, sin necesidad de modificar la lógica de FacturacionService ni del controlador. Así, Factory Method logra separar por completo la creación de los objetos de su utilización, haciendo que el sistema sea mucho más fácil de ampliar y mantener.
+![Interfaz Factura](assets/imagen3.png)
 
-### Diagrama UML Factory Method
+Las clases concretas implementan el comportamiento correspondiente a cada tipo de factura.
 
-![UML factory method](assets/FactoryMethod.png)
+![Implementación de FacturaResidencial](assets/imagen4.png)
 
-### Video Patrón Factory Method
+![Implementación de FacturaComercial](assets/imagen5.png)
 
-[![Video patron singleton](https://img.youtube.com/vi/Ty08ICiVTJ0/0.jpg)](https://www.youtube.com/watch?v=Ty08ICiVTJ0)
+La clase abstracta `FacturaFactory` define el método de creación.
 
-### Patron Builder
+![Clase abstracta FacturaFactory](assets/imagen6.png)
 
-Este módulo incorpora el patrón creacional Builder para gestionar la construcción flexible inmutable de objetos de infraestructura en la red eléctrica, como plantas de energía. Su adición permite instanciar componentes de red diferenciando estrictamente los datos obligatorios de los opcionales. De esta forma, el proyecto evita la creación de constructores recargados o el envío repetitivo de valores nulos, al mismo tiempo que garantiza la inmutabilidad de los datos en memoria y expone un servicio REST preparado para conectarse con Angular sin requerir cambios en la base de datos.
+Las fábricas concretas implementan ese método y devuelven el producto correspondiente. De esta forma, `FacturacionService` puede trabajar con la abstracción sin tener que construir directamente cada tipo de factura.
 
-La aplicación del patrón se realiza definiendo la clase principal PlantaEnergia con un constructor privado que incorpora dentro una clase estática estandarizada denominada PlantaEnergiaBuilder. El constructor del builder exige obligatoriamente los parámetros nombre y tipoFuente, mientras que los métodos encadenados como capacidadKw o ubicacion configuran las propiedades opcionales antes de ejecutar el método final build para obtener la instancia definitiva.
+![Integración con FacturacionService](assets/imagen7.png)
 
-En cuanto al detalle del código, el archivo PlantaEnergia.java define la estructura de datos con atributos privados y finales para asegurar su inmutabilidad, conteniendo la clase interna PlantaEnergiaBuilder que asigna valores por defecto a las propiedades opcionales y proporciona la interfaz de encadenamiento. 
+### Funcionamiento
 
-![imagen 1 metodo builder](assets/imagen8.png)
+1. El cliente envía una solicitud al endpoint `/api/facturacion`, indicando el tipo de factura y el consumo.
+2. El controlador delega el procesamiento a `FacturacionService`.
+3. El servicio utiliza la fábrica correspondiente.
+4. La fábrica crea una implementación concreta de `Factura`.
+5. Se calcula el importe y se devuelve la respuesta en formato JSON.
 
-Por su parte, el archivo PlantaEnergiaService.java se encarga de la orquestación de negocio al recibir los valores de la petición, inicializar el builder con los campos requeridos, evaluar qué atributos opcionales fueron enviados y retornar la planta construida.
+### Ventajas
 
-![imagen 2 metodo builder](assets/imagen9.png)
+La incorporación de un nuevo tipo de factura puede realizarse mediante una nueva implementación de `Factura` y su fábrica correspondiente, reduciendo la necesidad de modificar la lógica que utiliza los productos. La ampliación concreta dependerá de cómo se registre y seleccione la nueva fábrica.
 
-Finalmente, el archivo PlantaEnergiaController.java habilita el punto de entrada REST en la ruta /api/planta/crear con soporte para peticiones cruzadas mediante la anotación CrossOrigin. Este controlador recibe las solicitudes HTTP procesando los parámetros obligatorios y opcionales, delega la construcción al servicio de negocio y devuelve la respuesta en un objeto estructurado en formato JSON listo para el consumo del cliente
+### Diagrama UML
 
-![imagen 3 metodo builder](assets/imagen10.png)
+![Diagrama UML de Factory Method](assets/FactoryMethod.png)
 
-### Diagrama UML patrón Builder
+### Evidencia audiovisual
 
-![UML_metodo_Builder](assets/builder.png)
+[![Video del patrón Factory Method](https://img.youtube.com/vi/Ty08ICiVTJ0/0.jpg)](https://www.youtube.com/watch?v=Ty08ICiVTJ0)
 
-### Video Patrón Builder
-[![Video patron singleton](https://img.youtube.com/vi/ghf-MfEC9mA/0.jpg)](https://www.youtube.com/watch?v=ghf-MfEC9mA)
+---
 
-### Patrón Abstract Factory
+## 3. Patrón Builder
 
-El patrón Abstract Factory sirve para crear familias de objetos relacionados o dependientes sin especificar sus clases concretas. Sin embargo, no se incluye en Smart Grid porque la arquitectura del backend está organizada en módulos autónomos (factory, config y builder) que no requieren instanciar grupos de objetos interdependientes en bloque. Dado que la facturación, la configuración de la red y el registro de la infraestructura operan de manera totalmente independiente, implementar este patrón obligaría a añadir interfaces y fábricas multinivel que solo aportarían complejidad estructural y sobrediseño sin generar ningún beneficio en la evolución del código.
+### Propósito
 
-### Patrón Prototype
+El patrón creacional Builder permite construir objetos complejos paso a paso, separando el proceso de construcción de la representación final del objeto. Es especialmente útil cuando una clase contiene atributos obligatorios y opcionales.
 
-Por su parte, el patrón Prototype sirve para crear nuevos objetos clonando o copiando instancias ya existentes en memoria, evitando el costo de una inicialización desde cero. Este patrón se descarta en el proyecto debido a que no se alinea con el modelo de desarrollo de nuestra API REST en Spring Boot, la cual opera de forma sin estado (stateless) recibiendo parámetros directamente del cliente en Angular mediante solicitudes HTTP. En este flujo, cada objeto debe construirse dinámicamente a partir del payload JSON de la petición, una necesidad de instanciación flexible e inmutable que ya queda completamente cubierta en la capa de negocio mediante el patrón Builder.
+### Implementación en SmartGrid
+
+En SmartGrid, Builder se utiliza para construir objetos `PlantaEnergia`. Este patrón permite especificar los datos obligatorios de una planta y configurar opcionalmente su capacidad, batería de reserva y ubicación.
+
+La implementación se encuentra en la clase `PlantaEnergia.java`, que contiene la clase interna estática `PlantaEnergiaBuilder`.
+
+![Implementación de PlantaEnergia](assets/imagen8.png)
+
+### Clases involucradas
+
+- `PlantaEnergia`: representa la planta energética construida y contiene sus atributos.
+- `PlantaEnergiaBuilder`: define los datos requeridos, los valores por defecto y los métodos encadenados para configurar las propiedades.
+- `PlantaEnergiaService`: coordina la construcción a partir de los parámetros recibidos.
+- `PlantaEnergiaController`: expone la operación mediante el endpoint REST `/api/planta/crear`.
+
+El constructor del builder exige los atributos `nombre` y `tipoFuente`. Los métodos `capacidadKw()`, `voltajeSalida()`, `tieneBateriaReserva()` y `ubicacion()` permiten configurar los demás valores antes de invocar `build()`.
+
+![Implementación del servicio Builder](assets/imagen9.png)
+
+El controlador recibe los parámetros de la petición HTTP y delega la construcción al servicio, que devuelve la planta como respuesta JSON.
+
+![Implementación del controlador Builder](assets/imagen10.png)
+
+### Funcionamiento
+
+1. El cliente envía una petición al endpoint `/api/planta/crear`.
+2. El servicio crea un `PlantaEnergiaBuilder` con el nombre y el tipo de fuente.
+3. Si se reciben valores opcionales, el servicio configura las propiedades correspondientes.
+4. Se invoca `build()` para obtener el objeto `PlantaEnergia`.
+5. El controlador devuelve el resultado en formato JSON.
+
+### Ventajas
+
+Builder facilita la construcción de plantas con diferentes configuraciones sin tener que definir múltiples constructores. Además, la clase `PlantaEnergia` utiliza atributos finales, por lo que sus datos no pueden modificarse después de construir la instancia mediante los mecanismos habituales de acceso.
+
+**Alcance actual:** la planta se construye en memoria y se devuelve en la respuesta HTTP; esta operación no implica su persistencia en PostgreSQL.
+
+### Diagrama UML
+
+![Diagrama UML del patrón Builder](assets/builder.png)
+
+### Evidencia audiovisual
+
+[![Video del patrón Builder](https://img.youtube.com/vi/ghf-MfEC9mA/0.jpg)](https://www.youtube.com/watch?v=ghf-MfEC9mA)
+
+---
+
+## 4. Patrón Flyweight
+
+### Propósito
+
+El patrón estructural Flyweight permite compartir objetos que contienen información común entre varias instancias, reduciendo la duplicación de datos y el consumo de memoria cuando existen numerosos objetos similares.
+
+### Implementación en SmartGrid
+
+En SmartGrid, Flyweight se utiliza para compartir información común de las fuentes energéticas asociadas a las plantas. Por ejemplo, distintas plantas solares pueden compartir los datos descriptivos de la fuente solar, aunque cada planta tenga su propio nombre, capacidad y ubicación.
+
+### Clases involucradas
+
+- `FuenteEnergiaFlyweight`: contiene el tipo, la descripción y las características de una fuente energética.
+- `FuenteEnergiaFactory`: administra las instancias compartidas mediante un `HashMap` y reutiliza los objetos existentes para un mismo tipo de fuente.
+- `PlantaEnergia`: conserva los datos particulares de cada planta y una referencia al objeto compartido.
+- `FlyweightTest`: verifica que dos plantas solares reutilicen la misma instancia.
+
+### Funcionamiento
+
+1. Se construye una planta mediante `PlantaEnergiaBuilder`.
+2. Durante la construcción, `PlantaEnergia` solicita a `FuenteEnergiaFactory` el objeto correspondiente al tipo de fuente.
+3. Si el objeto ya existe, la fábrica lo reutiliza; de lo contrario, crea uno nuevo y lo almacena.
+4. Las plantas que utilizan el mismo tipo de fuente pueden compartir la misma instancia de `FuenteEnergiaFlyweight`.
+
+![Diagrama UML del patrón Flyweight](assets/uml-flyweight.png)
+
+### Prueba realizada
+
+La prueba automatizada `FlyweightTest` finalizó con el resultado **Test passed**. La prueba comprueba que dos plantas solares diferentes hacen referencia al mismo objeto compartido en memoria.
+
+### Ventajas
+
+Flyweight separa los datos comunes de una fuente energética de los datos particulares de cada planta. Esta estructura permite reutilizar información compartida y ofrece una base para ampliar la gestión de fuentes energéticas.
+
+**Alcance actual:** las plantas se construyen en memoria y no se guardan en PostgreSQL. La reutilización se realiza durante la ejecución de la aplicación.
+
+---
+
+## 5. Patrón Proxy
+
+### Propósito
+
+El patrón estructural Proxy proporciona un intermediario que controla el acceso a un servicio u objeto real antes de delegarle una operación. Puede utilizarse para incorporar controles de acceso y otras validaciones sin concentrar toda esa lógica en el servicio de negocio.
+
+### Implementación en SmartGrid
+
+En SmartGrid, Proxy controla el acceso a la construcción de plantas energéticas. La operación requiere que el usuario exista, esté activo y tenga el rol `ADMIN`.
+
+### Clases involucradas
+
+- `PlantaEnergiaController`: recibe la solicitud HTTP y obtiene el usuario mediante `UsuarioRepository`.
+- `PlantaEnergiaProxy`: actúa como intermediario y valida los permisos antes de delegar la operación.
+- `AutorizacionService`: verifica el estado del usuario y el rol requerido. Si la validación falla, lanza una excepción que Spring traduce en una respuesta HTTP `403 Forbidden`.
+- `PlantaEnergiaService`: ejecuta la construcción de la planta mediante Builder.
+- `Usuario` y `Rol`: representan al usuario y los roles empleados en la validación.
+
+### Funcionamiento
+
+1. El cliente envía una solicitud al endpoint `/api/planta/crear`, incluyendo el nombre de usuario y los datos de la planta.
+2. El controlador busca al usuario en la base de datos.
+3. El controlador delega la operación a `PlantaEnergiaProxy`.
+4. El Proxy solicita a `AutorizacionService` que valide el rol `ADMIN`.
+5. Si el usuario está activo y autorizado, el Proxy delega la construcción a `PlantaEnergiaService`.
+6. Si el usuario no cumple los requisitos, se rechaza la operación con HTTP `403 Forbidden`.
+
+![Diagrama UML del patrón Proxy](assets/uml-proxy.png)
+
+### Pruebas realizadas
+
+| Caso de prueba | Resultado esperado | Resultado obtenido |
+|---|---|---|
+| Usuario `admin` | HTTP 200 OK | La planta se construye correctamente. |
+| Usuario `operador` | HTTP 403 Forbidden | La operación se rechaza por falta de permisos. |
+
+### Ventajas
+
+Proxy separa el control de acceso de la construcción de la planta. De esta forma, el servicio real conserva su responsabilidad de construir el objeto, mientras que el intermediario controla si la operación puede ejecutarse.
+
+**Alcance actual:** Proxy protege la operación de construcción de plantas. Como las plantas todavía no se persisten en PostgreSQL, no se están controlando operaciones de creación, actualización o eliminación de registros almacenados. Además, la autorización por rol no sustituye un sistema completo de autenticación y seguridad HTTP.
+
+---
+
+## 6. Patrones evaluados y no implementados
+
+No todos los patrones de diseño aportan beneficios a todos los sistemas. En SmartGrid también se han evaluado patrones que, por las necesidades actuales del proyecto, no se han incorporado a la implementación.
+
+### Abstract Factory
+
+Abstract Factory permite crear familias de objetos relacionados sin depender de sus clases concretas. No se implementa actualmente porque los módulos de configuración, facturación y construcción de plantas no requieren crear familias de objetos relacionados como una unidad. Añadir una jerarquía de fábricas adicionales incrementaría la complejidad sin resolver una necesidad actual del sistema.
+
+### Prototype
+
+Prototype permite crear objetos mediante la clonación de instancias existentes. No se implementa actualmente porque la construcción de las plantas ya está cubierta por Builder, que permite configurar explícitamente los atributos obligatorios y opcionales. En el alcance actual no existe una necesidad concreta de duplicar plantas a partir de prototipos existentes.
+
+
 
 ### Patrón Adapter
 
