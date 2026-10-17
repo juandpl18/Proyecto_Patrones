@@ -280,6 +280,72 @@ La implementación de Facade demuestra cómo una fachada puede ofrecer una inter
 
 [![Video patron Adapter y Decorator](https://img.youtube.com/vi/WedsvCXpcdo/0.jpg)](https://www.youtube.com/watch?v=WedsvCXpcdo)
 
+## Patrón Flyweight
+
+### Propósito
+
+El patrón estructural Flyweight permite compartir objetos que contienen información común entre múltiples instancias, reduciendo la creación de objetos duplicados y el consumo de memoria.
+
+### Implementación en SmartGrid
+
+En SmartGrid, Flyweight se utiliza para compartir la información común de las fuentes de energía de las plantas. Por ejemplo, varias plantas solares pueden reutilizar el mismo objeto con la descripción y las características de la energía solar.
+
+**Clases involucradas:**
+
+- `FuenteEnergiaFlyweight`: almacena la información compartida de una fuente energética, incluyendo su tipo, descripción y características.
+- `FuenteEnergiaFactory`: administra los objetos compartidos mediante un `HashMap` y reutiliza el objeto correspondiente al tipo de fuente solicitado.
+- `PlantaEnergia`: integra Flyweight con el patrón Builder y mantiene una referencia al objeto compartido de su fuente energética.
+- `FlyweightTest`: comprueba que dos plantas solares reutilizan la misma instancia de `FuenteEnergiaFlyweight`.
+
+### Funcionamiento
+
+Cuando se construye una planta, `PlantaEnergia` solicita a `FuenteEnergiaFactory` el objeto correspondiente a su fuente energética. Si ya existe, se reutiliza; de lo contrario, se crea y se almacena para futuras solicitudes.
+
+La comparación mediante `==` en la prueba automatizada permite verificar que dos plantas solares hacen referencia al mismo objeto en memoria.
+
+### Prueba realizada
+
+La prueba `FlyweightTest` finalizó correctamente con el resultado **Test passed**, confirmando la reutilización de la instancia para dos plantas solares.
+
+**Alcance actual:** las plantas se construyen en memoria y todavía no se persisten en la base de datos.
+
+---
+
+## Patrón Proxy
+
+### Propósito
+
+El patrón estructural Proxy proporciona un intermediario que controla el acceso a un objeto o servicio real antes de delegarle una operación.
+
+### Implementación en SmartGrid
+
+En SmartGrid, Proxy controla el acceso a la construcción de plantas energéticas según el rol del usuario. Solamente los usuarios activos con el rol `ADMIN` pueden ejecutar esta operación.
+
+**Clases involucradas:**
+
+- `PlantaEnergiaController`: recibe la solicitud HTTP y busca al usuario en la base de datos mediante `UsuarioRepository`.
+- `PlantaEnergiaProxy`: actúa como intermediario, valida los permisos del usuario y delega la operación al servicio real.
+- `AutorizacionService`: comprueba que el usuario esté activo y tenga el rol requerido. Si no cumple las condiciones, genera una respuesta HTTP `403 Forbidden`.
+- `PlantaEnergiaService`: construye la planta utilizando el patrón Builder.
+
+### Funcionamiento
+
+1. El controlador recibe la solicitud para construir una planta.
+2. Se busca el usuario por su nombre de usuario.
+3. El controlador entrega el usuario y los datos de la planta a `PlantaEnergiaProxy`.
+4. El Proxy solicita a `AutorizacionService` la validación del rol `ADMIN`.
+5. Si el usuario está autorizado, el Proxy delega la construcción a `PlantaEnergiaService`.
+6. Si el usuario no está autorizado o está inactivo, la operación se rechaza con HTTP `403 Forbidden`.
+
+### Pruebas realizadas
+
+| Usuario | Resultado | Descripción |
+|---|---|---|
+| `admin` | HTTP 200 OK | Se permite construir la planta. |
+| `operador` | HTTP 403 Forbidden | Se rechaza la operación por falta de autorización. |
+
+**Alcance actual:** Proxy controla el acceso a la construcción de plantas, pero estas todavía no se guardan en PostgreSQL. La autorización se basa en el usuario y su rol recuperados de la base de datos; no representa por sí sola un sistema completo de autenticación y seguridad HTTP.
+
 
 # Ejecución del proyecto SmartGrid
 
