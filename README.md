@@ -414,9 +414,9 @@ La prueba `FlyweightTest` finalizó correctamente con el resultado **Test passed
 
 ---
 
-### Video patrón Factory Method
+### Video patrón Flayweight
 
-[![Video del patrón Factory Method](https://img.youtube.com/vi/Ty08ICiVTJ0/0.jpg)](https://www.youtube.com/watch?v=Ty08ICiVTJ0)
+[![Video del patrón Factory Method](https://img.youtube.com/vi/15xdZdC2LHo/0.jpg)](https://www.youtube.com/watch?v=15xdZdC2LHo)
 
 ---
 
