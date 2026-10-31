@@ -529,7 +529,7 @@ Si alguna validación falla, se genera una excepción HTTP 400 (Bad Request) y s
 
 ### Diagrama UML Chain of Responsibility
 
-![UML patron Chain of Responsibility](assets/ChainOfresponsability.png)
+![UML patron Chain of Responsibility](assets/ChainOfresponsability.jpg)
 
 ---
 
@@ -590,7 +590,7 @@ En esta implementación, Command trabaja junto con Builder: Command encapsula la
 
 ### Diagrama UML Command
 
-![UML patron Command](assets/Command.png)
+![UML patron Command](assets/Command.jpg)
 
 
 ---
