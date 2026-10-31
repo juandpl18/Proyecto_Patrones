@@ -487,10 +487,24 @@ En SmartGrid se utiliza este patrón para validar los datos necesarios antes de 
 ### Clases involucradas
 
 - **ValidacionHandler:** clase abstracta que define la estructura general de los validadores. Contiene la referencia al siguiente elemento de la cadena y el método para ejecutar las validaciones.
+
+![imagen 1 Chain of Responsibility](assets/imagen27.png)
+
 - **NombreValidacion:** verifica que el nombre de la planta no sea nulo ni esté vacío.
+
+![imagen 2 Chain of Responsibility](assets/imagen28.png)
+  
 - **FuenteEnergiaValidacion:** comprueba que el tipo de fuente de energía sea válido: SOLAR, EOLICA o HIDRAULICA.
+
+![imagen 3 Chain of Responsibility](assets/imagen29.png)
+
 - **CapacidadValidacion:** verifica que la capacidad de generación, cuando se proporciona, sea mayor que cero.
+
+![imagen 4 Chain of Responsibility](assets/imagen30.png)
+
 - **PlantaEnergiaValidacionChain:** configura y organiza la cadena de validaciones, estableciendo el orden en que deben ejecutarse.
+
+![imagen 5 Chain of Responsibility](assets/imagen31.png)
 
 ### Funcionamiento
 
@@ -502,12 +516,20 @@ Cuando se solicita construir una planta de energía, el sistema ejecuta las vali
 
 Si alguna validación falla, se genera una excepción HTTP 400 (Bad Request) y se detiene el proceso. Si todas las validaciones son correctas, se permite continuar con la construcción de la planta.
 
+![imagen 6 Chain of Responsibility](assets/imagen32.png)
+
 ### Ventajas de su implementación
 
 - Separa las reglas de validación en clases independientes.
 - Facilita agregar nuevas validaciones sin modificar las existentes.
 - Permite organizar el proceso de validación en una secuencia.
 - Mejora la organización y el mantenimiento del código.
+
+---
+
+### Diagrama UML Chain of Responsibility
+
+![UML patron Chain of Responsibility](assets/ChainOfresponsability.png)
 
 ---
 
@@ -524,10 +546,24 @@ En SmartGrid se utiliza este patrón para encapsular la operación de construcci
 ### Clases involucradas
 
 - **Comando:** interfaz que define el método `ejecutar()`, el cual deben implementar los comandos concretos.
+
+![imagen 1 Command](assets/imagen33.png)
+
 - **CrearPlantaCommand:** implementación concreta que almacena los datos de la planta y delega su construcción a `PlantaEnergiaService`.
+
+![imagen 2 Command](assets/imagen34.png)
+  
 - **PlantaEnergiaInvoker:** encargado de recibir el comando y solicitar su ejecución, sin conocer los detalles internos de la operación.
+
+![imagen 3 Command](assets/imagen35.png)
+
 - **PlantaEnergiaService:** contiene la lógica para construir una planta de energía utilizando el patrón Builder.
+
+![imagen 4 Command](assets/imagen36.png)
+
 - **PlantaEnergia:** objeto resultante de la construcción de la planta.
+
+![imagen 5 Command](assets/imagen37.png)
 
 ### Funcionamiento
 
@@ -549,6 +585,13 @@ El proceso de ejecución se desarrolla de la siguiente manera:
 - Favorece la organización y reutilización del código.
 
 En esta implementación, Command trabaja junto con Builder: Command encapsula la solicitud y Builder se encarga de construir el objeto paso a paso.
+
+---
+
+### Diagrama UML Command
+
+![UML patron Command](assets/Command.png)
+
 
 ---
 
