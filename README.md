@@ -474,6 +474,84 @@ En SmartGrid, Proxy controla el acceso a la construcción de plantas energética
 
 ---
 
+## Patrón Chain of Responsibility 
+
+### ¿Qué es?
+
+El patrón Chain of Responsibility permite pasar una solicitud a través de una cadena de objetos encargados de procesarla. Cada objeto realiza una validación o acción y, si corresponde, delega la solicitud al siguiente elemento de la cadena.
+
+### Implementación en SmartGrid
+
+En SmartGrid se utiliza este patrón para validar los datos necesarios antes de construir una planta de energía. De esta manera, cada validación se encuentra separada en una clase independiente, facilitando el mantenimiento y la incorporación de nuevas reglas.
+
+### Clases involucradas
+
+- **ValidacionHandler:** clase abstracta que define la estructura general de los validadores. Contiene la referencia al siguiente elemento de la cadena y el método para ejecutar las validaciones.
+- **NombreValidacion:** verifica que el nombre de la planta no sea nulo ni esté vacío.
+- **FuenteEnergiaValidacion:** comprueba que el tipo de fuente de energía sea válido: SOLAR, EOLICA o HIDRAULICA.
+- **CapacidadValidacion:** verifica que la capacidad de generación, cuando se proporciona, sea mayor que cero.
+- **PlantaEnergiaValidacionChain:** configura y organiza la cadena de validaciones, estableciendo el orden en que deben ejecutarse.
+
+### Funcionamiento
+
+Cuando se solicita construir una planta de energía, el sistema ejecuta las validaciones en el siguiente orden:
+
+1. **Validación del nombre:** comprueba que se haya proporcionado un nombre.
+2. **Validación de la fuente:** verifica que la fuente de energía corresponda a una de las opciones permitidas.
+3. **Validación de la capacidad:** comprueba que la capacidad sea mayor que cero, si se especificó.
+
+Si alguna validación falla, se genera una excepción HTTP 400 (Bad Request) y se detiene el proceso. Si todas las validaciones son correctas, se permite continuar con la construcción de la planta.
+
+### Ventajas de su implementación
+
+- Separa las reglas de validación en clases independientes.
+- Facilita agregar nuevas validaciones sin modificar las existentes.
+- Permite organizar el proceso de validación en una secuencia.
+- Mejora la organización y el mantenimiento del código.
+
+---
+
+## Patrón Command 
+
+### ¿Qué es?
+
+El patrón Command encapsula una solicitud u operación dentro de un objeto. Esto permite separar el objeto que solicita una acción del objeto que realmente la ejecuta.
+
+### Implementación en SmartGrid
+
+En SmartGrid se utiliza este patrón para encapsular la operación de construcción de una planta de energía. Los parámetros necesarios se almacenan dentro de un comando y posteriormente se ejecuta la operación mediante un objeto encargado de invocarlo.
+
+### Clases involucradas
+
+- **Comando:** interfaz que define el método `ejecutar()`, el cual deben implementar los comandos concretos.
+- **CrearPlantaCommand:** implementación concreta que almacena los datos de la planta y delega su construcción a `PlantaEnergiaService`.
+- **PlantaEnergiaInvoker:** encargado de recibir el comando y solicitar su ejecución, sin conocer los detalles internos de la operación.
+- **PlantaEnergiaService:** contiene la lógica para construir una planta de energía utilizando el patrón Builder.
+- **PlantaEnergia:** objeto resultante de la construcción de la planta.
+
+### Funcionamiento
+
+El proceso de ejecución se desarrolla de la siguiente manera:
+
+1. El sistema recibe una solicitud para construir una planta de energía.
+2. Se crea un objeto `CrearPlantaCommand` con los parámetros necesarios: nombre, fuente, capacidad, batería de reserva y ubicación.
+3. El comando recibe una instancia de `PlantaEnergiaService`.
+4. `PlantaEnergiaInvoker` recibe el comando y ejecuta su método `ejecutar()`.
+5. `CrearPlantaCommand` delega la construcción a `PlantaEnergiaService`.
+6. El servicio utiliza el patrón Builder para construir y devolver el objeto `PlantaEnergia`.
+
+### Ventajas de su implementación
+
+- Separa la solicitud de la ejecución de una operación.
+- Encapsula los parámetros y la lógica de una acción en un objeto.
+- Facilita incorporar nuevos comandos para otras operaciones.
+- Permite que el invocador ejecute comandos sin conocer su implementación interna.
+- Favorece la organización y reutilización del código.
+
+En esta implementación, Command trabaja junto con Builder: Command encapsula la solicitud y Builder se encarga de construir el objeto paso a paso.
+
+---
+
 # SmartGrid — Guía de instalación y ejecución
 
 ## 1. Descripción del proyecto
