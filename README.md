@@ -592,45 +592,100 @@ En esta implementación, Command trabaja junto con Builder: Command encapsula la
 
 ![UML patron Command](assets/Command.jpg)
 
+---
+
+[![Video del patrón Chain y Command](https://img.youtube.com/vi/b75lsYrQZok/0.jpg)](https://www.youtube.com/watch?v=b75lsYrQZok)
 
 ---
 
-### Patrón Iterator
+## Patrón Iterator
 
-El patrón Iterator permite recorrer los elementos de una colección sin exponer su representación subyacente ni la estructura interna de sus datos.
+### ¿Qué es?
 
-En SmartGrid, el manejo y filtrado de listas (como plantas de energía o registros de consumo) se resuelve de forma nativa mediante las colecciones de Java, la API de Streams y el soporte del entorno de Spring. Adicionalmente, la transferencia de datos hacia la interfaz en Angular se realiza mediante arreglos estructurados en formato JSON expuestos por la API REST.
+El patrón Iterator permite recorrer los elementos de una colección de manera secuencial sin exponer directamente su estructura interna. Proporciona una forma estandarizada de acceder a los elementos, independientemente de cómo estén almacenados.
 
-Implementar un iterador personalizado requeriría definir interfaces y clases adicionales para ejecutar recorridos que el lenguaje y el framework ya realizan de manera estándar y optimizada.
+### Evaluación en SmartGrid
 
-Por esta razón, se decidió no utilizar este patrón para evitar añadir abstracciones innecesarias sobre las estructuras de datos del sistema.
+En SmartGrid, el manejo y recorrido de colecciones, como listas de plantas de energía o registros de consumo, puede realizarse mediante las herramientas que proporciona Java, como las interfaces `Iterator` e `Iterable`, los ciclos mejorados (*for-each*) y la API de Streams.
+
+Asimismo, la comunicación entre el backend y el frontend se realiza mediante servicios REST que exponen los datos en formato JSON, permitiendo que Angular los procese mediante arreglos y sus mecanismos habituales de iteración.
+
+### Razones para no implementarlo
+
+Se decidió no implementar una versión personalizada del patrón Iterator por las siguientes razones:
+
+- Java proporciona mecanismos nativos para recorrer colecciones.
+- No existe la necesidad de ocultar estructuras de datos mediante iteradores personalizados.
+- Una implementación adicional generaría clases e interfaces innecesarias.
+- Las herramientas actuales permiten realizar los recorridos requeridos de manera sencilla y eficiente.
+
+### Conclusión
+
+Se determinó que la implementación personalizada de Iterator no aportaría un beneficio significativo a la arquitectura actual de SmartGrid, debido a que las necesidades de recorrido de colecciones ya están cubiertas por las funcionalidades estándar del lenguaje Java.
 
 
 ---
 
 
-### Patrón Memento
+## Patrón Memento
 
-El patrón Memento permite capturar y almacenar el estado interno de un objeto para que pueda ser restaurado posteriormente sin violar su encapsulamiento.
+### ¿Qué es?
 
-La arquitectura del backend de SmartGrid está diseñada sobre servicios REST sin estado (*stateless*), donde cada solicitud HTTP procesa la información de forma independiente y la persistencia de datos se delega a PostgreSQL. Almacenar estados intermedios de las entidades en la memoria del servidor para implementar mecanismos de restauración (*undo/redo*) contravendría los principios de diseño de una API web y aumentaría el consumo de memoria RAM.
+El patrón Memento permite capturar y almacenar el estado interno de un objeto para restaurarlo posteriormente sin exponer directamente su estructura interna. Se utiliza principalmente para implementar funcionalidades de recuperación de estados anteriores, como los mecanismos de deshacer y rehacer (*undo/redo*).
 
-Cualquier necesidad de conservar registros históricos o estados anteriores de la red debe ser gestionada directamente en la capa de persistencia mediante la base de datos.
+### Evaluación en SmartGrid
 
-Por estas razones, se decidió no incorporar este patrón a la arquitectura del proyecto.
+En SmartGrid, actualmente no se contempla la necesidad de implementar funcionalidades de restauración de estados anteriores sobre los objetos del sistema.
+
+Las operaciones de consulta y modificación de información se gestionan mediante los servicios del backend y la persistencia de los datos en PostgreSQL.
+
+Aunque sería posible implementar Memento utilizando almacenamiento persistente, esto implicaría desarrollar mecanismos adicionales para capturar, conservar y recuperar estados anteriores, sin responder a una necesidad funcional actual del proyecto.
+
+### Razones para no implementarlo
+
+Se decidió no implementar este patrón por las siguientes razones:
+
+- Actualmente no existen funcionalidades que requieran deshacer o restaurar operaciones.
+- La información del sistema se gestiona mediante los servicios y la base de datos PostgreSQL.
+- La conservación de registros históricos puede resolverse mediante mecanismos de persistencia y auditoría cuando exista ese requerimiento.
+- Su implementación aumentaría la complejidad de la arquitectura sin aportar un beneficio significativo a las funcionalidades actuales.
+
+### Conclusión
+
+Se determinó que Memento no es necesario para la versión actual de SmartGrid, debido a que el sistema no requiere mecanismos de restauración de estados anteriores. Su incorporación podría evaluarse en futuras versiones si se implementan funcionalidades de recuperación de configuraciones o deshacer operaciones.
 
 ---
 
 
-### Patrón Mediator
+## Patrón Mediator
 
-El patrón Mediator define un objeto que encapsula la interacción entre un conjunto de componentes, evitando que se refieran entre sí de forma directa y reduciendo el acoplamiento.
+### ¿Qué es?
 
-En la arquitectura actual de SmartGrid, el desacoplamiento de componentes se logra de manera nativa mediante la inyección de dependencias de Spring Boot, mientras que la orquestación y coordinación de múltiples servicios se encuentra centralizada a través del patrón Facade.
+El patrón Mediator define un objeto central encargado de coordinar la comunicación y las interacciones entre diferentes componentes. Su objetivo es reducir las dependencias directas entre ellos y centralizar la lógica de coordinación.
 
-Adicionalmente, las operaciones sobre la infraestructura ya se encuentran encapsuladas y estructuradas con los patrones Chain of Responsibility y Command. Incorporar un mediador adicional generaría un nivel de intermediación redundante sobre componentes que ya se encuentran debidamente organizados.
+### Evaluación en SmartGrid
 
-Por ello, se evaluó este patrón y se decidió no implementarlo para mantener la arquitectura limpia y libre de capas sobrantes.
+En SmartGrid, la coordinación de operaciones que requieren integrar diferentes funcionalidades ya se encuentra organizada mediante el patrón Facade, que proporciona un punto de acceso simplificado a los servicios del sistema.
+
+Asimismo, las operaciones relacionadas con la creación de plantas de energía están estructuradas mediante Chain of Responsibility y Command, asignando responsabilidades específicas a cada componente.
+
+Spring Boot también facilita el desacoplamiento entre componentes mediante la inyección de dependencias. Sin embargo, este mecanismo no sustituye directamente la función de Mediator, ya que su propósito principal es administrar las dependencias y no centralizar la comunicación entre objetos.
+
+En la arquitectura actual no existe una necesidad de coordinación compleja entre múltiples componentes que justifique incorporar un mediador adicional.
+
+### Razones para no implementarlo
+
+Se decidió no implementar este patrón por las siguientes razones:
+
+- La coordinación de funcionalidades que requieren una interfaz simplificada ya está cubierta mediante Facade.
+- Las operaciones de creación de plantas cuentan con responsabilidades distribuidas entre Chain of Responsibility y Command.
+- Spring Boot permite gestionar las dependencias entre componentes mediante inyección de dependencias.
+- No existe actualmente una comunicación compleja entre múltiples componentes que requiera un coordinador central adicional.
+- Su incorporación podría generar una capa de intermediación innecesaria.
+
+### Conclusión
+
+Se determinó que Mediator no es necesario para la arquitectura actual de SmartGrid, debido a que los mecanismos existentes permiten organizar y coordinar las operaciones del sistema. Su implementación se podría considerar en futuras versiones si aumenta la complejidad de las interacciones entre los diferentes subsistemas.
 
 ---
 
