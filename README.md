@@ -594,6 +594,8 @@ En esta implementación, Command trabaja junto con Builder: Command encapsula la
 
 ---
 
+### Video patrones Chain of responsability & Command
+
 [![Video del patrón Chain y Command](https://img.youtube.com/vi/b75lsYrQZok/0.jpg)](https://www.youtube.com/watch?v=b75lsYrQZok)
 
 ---
@@ -619,9 +621,7 @@ Se decidió no implementar una versión personalizada del patrón Iterator por l
 - Una implementación adicional generaría clases e interfaces innecesarias.
 - Las herramientas actuales permiten realizar los recorridos requeridos de manera sencilla y eficiente.
 
-### Conclusión
-
-Se determinó que la implementación personalizada de Iterator no aportaría un beneficio significativo a la arquitectura actual de SmartGrid, debido a que las necesidades de recorrido de colecciones ya están cubiertas por las funcionalidades estándar del lenguaje Java.
+Por esto se determinó que la implementación personalizada de Iterator no aportaría un beneficio significativo a la arquitectura actual de SmartGrid, debido a que las necesidades de recorrido de colecciones ya están cubiertas por las funcionalidades estándar del lenguaje Java.
 
 
 ---
@@ -650,9 +650,7 @@ Se decidió no implementar este patrón por las siguientes razones:
 - La conservación de registros históricos puede resolverse mediante mecanismos de persistencia y auditoría cuando exista ese requerimiento.
 - Su implementación aumentaría la complejidad de la arquitectura sin aportar un beneficio significativo a las funcionalidades actuales.
 
-### Conclusión
-
-Se determinó que Memento no es necesario para la versión actual de SmartGrid, debido a que el sistema no requiere mecanismos de restauración de estados anteriores. Su incorporación podría evaluarse en futuras versiones si se implementan funcionalidades de recuperación de configuraciones o deshacer operaciones.
+Por estas razones se determinó que Memento no es necesario para la versión actual de SmartGrid, debido a que el sistema no requiere mecanismos de restauración de estados anteriores. Su incorporación podría evaluarse en futuras versiones si se implementan funcionalidades de recuperación de configuraciones o deshacer operaciones.
 
 ---
 
@@ -683,9 +681,7 @@ Se decidió no implementar este patrón por las siguientes razones:
 - No existe actualmente una comunicación compleja entre múltiples componentes que requiera un coordinador central adicional.
 - Su incorporación podría generar una capa de intermediación innecesaria.
 
-### Conclusión
-
-Se determinó que Mediator no es necesario para la arquitectura actual de SmartGrid, debido a que los mecanismos existentes permiten organizar y coordinar las operaciones del sistema. Su implementación se podría considerar en futuras versiones si aumenta la complejidad de las interacciones entre los diferentes subsistemas.
+entonces se determinó que Mediator no es necesario para la arquitectura actual de SmartGrid, debido a que los mecanismos existentes permiten organizar y coordinar las operaciones del sistema. Su implementación se podría considerar en futuras versiones si aumenta la complejidad de las interacciones entre los diferentes subsistemas.
 
 ---
 
