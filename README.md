@@ -595,6 +595,45 @@ En esta implementación, Command trabaja junto con Builder: Command encapsula la
 
 ---
 
+### Patrón Iterator
+
+El patrón Iterator permite recorrer los elementos de una colección sin exponer su representación subyacente ni la estructura interna de sus datos.
+
+En SmartGrid, el manejo y filtrado de listas (como plantas de energía o registros de consumo) se resuelve de forma nativa mediante las colecciones de Java, la API de Streams y el soporte del entorno de Spring. Adicionalmente, la transferencia de datos hacia la interfaz en Angular se realiza mediante arreglos estructurados en formato JSON expuestos por la API REST.
+
+Implementar un iterador personalizado requeriría definir interfaces y clases adicionales para ejecutar recorridos que el lenguaje y el framework ya realizan de manera estándar y optimizada.
+
+Por esta razón, se decidió no utilizar este patrón para evitar añadir abstracciones innecesarias sobre las estructuras de datos del sistema.
+
+
+---
+
+
+### Patrón Memento
+
+El patrón Memento permite capturar y almacenar el estado interno de un objeto para que pueda ser restaurado posteriormente sin violar su encapsulamiento.
+
+La arquitectura del backend de SmartGrid está diseñada sobre servicios REST sin estado (*stateless*), donde cada solicitud HTTP procesa la información de forma independiente y la persistencia de datos se delega a PostgreSQL. Almacenar estados intermedios de las entidades en la memoria del servidor para implementar mecanismos de restauración (*undo/redo*) contravendría los principios de diseño de una API web y aumentaría el consumo de memoria RAM.
+
+Cualquier necesidad de conservar registros históricos o estados anteriores de la red debe ser gestionada directamente en la capa de persistencia mediante la base de datos.
+
+Por estas razones, se decidió no incorporar este patrón a la arquitectura del proyecto.
+
+---
+
+
+### Patrón Mediator
+
+El patrón Mediator define un objeto que encapsula la interacción entre un conjunto de componentes, evitando que se refieran entre sí de forma directa y reduciendo el acoplamiento.
+
+En la arquitectura actual de SmartGrid, el desacoplamiento de componentes se logra de manera nativa mediante la inyección de dependencias de Spring Boot, mientras que la orquestación y coordinación de múltiples servicios se encuentra centralizada a través del patrón Facade.
+
+Adicionalmente, las operaciones sobre la infraestructura ya se encuentran encapsuladas y estructuradas con los patrones Chain of Responsibility y Command. Incorporar un mediador adicional generaría un nivel de intermediación redundante sobre componentes que ya se encuentran debidamente organizados.
+
+Por ello, se evaluó este patrón y se decidió no implementarlo para mantener la arquitectura limpia y libre de capas sobrantes.
+
+---
+
 # SmartGrid — Guía de instalación y ejecución
 
 ## 1. Descripción del proyecto
