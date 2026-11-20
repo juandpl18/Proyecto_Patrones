@@ -685,6 +685,143 @@ entonces se determinó que Mediator no es necesario para la arquitectura actual 
 
 ---
 
+
+## Patrón Observer
+
+### ¿Qué es?
+
+El patrón Observer define una dependencia de uno a muchos entre objetos, de manera que cuando uno cambia de estado, todos sus dependientes son notificados y actualizados automáticamente. Su objetivo es desacoplar al emisor de un evento de los componentes que reaccionan ante él.
+
+### Evaluación en SmartGrid
+
+En el backend desarrollado en Spring Boot, las operaciones funcionan bajo un flujo síncrono de petición y respuesta REST coordinado por medio del patrón Facade, mientras que las validaciones de umbrales y reglas de negocio en la gestión de plantas se ejecutan secuencialmente con Chain of Responsibility sin mantener múltiples suscriptores en memoria.
+
+En el frontend con Angular, la actualización reactiva de la interfaz frente a los cambios de consumo o estado ya está resuelta de forma nativa mediante Signals.
+
+Por lo tanto, no existe actualmente un escenario donde varios módulos independientes del servidor deban suscribirse dinámicamente a un mismo evento.
+
+### Razones para no implementarlo
+
+Se decidió no implementar este patrón por las siguientes razones:
+
+- La comunicación en el backend sigue un flujo síncrono petición-respuesta orquestado mediante Facade.
+- Las validaciones secuenciales sobre las operaciones de la red ya están cubiertas por Chain of Responsibility.
+- Angular gestiona la reactividad de la interfaz de manera nativa con Signals sin requerir suscripciones manuales.
+- No existen múltiples consumidores independientes en el servidor que necesiten reaccionar al mismo evento de forma desacoplada.
+- Implementar una estructura clásica de sujeto y observadores duplicaría mecanismos que el propio framework ya ofrece.
+
+Con las capacidades reactivas del frontend y la organización actual de servicios en el backend, la sincronización de datos se mantiene simple y directa. Su implementación podría considerarse en futuras versiones si el sistema incorpora notificaciones en tiempo real mediante WebSockets o integración con servicios externos independientes.
+
+---
+
+
+## Patrón State
+
+### ¿Qué es?
+
+El patrón State permite que un objeto altere su comportamiento cuando su estado interno cambia, encapsulando cada estado en una clase independiente para que parezca que el objeto cambia de clase en tiempo de ejecución.
+
+### Evaluación en SmartGrid
+
+Las entidades principales del dominio —como los usuarios, las facturas y las plantas de generación— manejan estados operativos sencillos, controlados principalmente mediante atributos booleanos y validaciones puntuales antes de ejecutar una operación.
+
+Ninguna de estas entidades atraviesa un ciclo de vida complejo donde todos sus métodos cambien radicalmente de lógica según la fase en la que se encuentren.
+
+Además, los controles previos sobre si una acción puede o no ejecutarse ya se resuelven mediante Proxy y Chain of Responsibility.
+
+### Razones para no implementarlo
+
+Se decidió no implementar este patrón por las siguientes razones:
+
+- Las entidades actuales operan con estados simples que no requieren máquinas de estado complejas.
+- Las validaciones previas a la ejecución de operaciones ya están cubiertas mediante Proxy y Chain of Responsibility.
+- Crear una clase independiente por cada posible estado fragmentaría la lógica de negocio sin resolver un problema real de condicionales extensos.
+- Mantener jerarquías de clases para los estados aumentaría innecesariamente la cantidad de archivos y la complejidad del modelo.
+
+Conservar el estado como atributos directos dentro de las entidades facilita la persistencia con JPA y mantiene el código fácil de leer. Si más adelante las plantas de energía llegan a manejar ciclos de vida complejos —como fases de arranque, sincronización, mantenimiento programado y falla crítica con comportamientos distintos en cada etapa—, tendría sentido migrar esa lógica a un esquema basado en State.
+
+---
+
+
+## Patrón Strategy
+
+### ¿Qué es?
+
+El patrón Strategy define una familia de algoritmos, encapsula cada uno en una clase separada y los hace intercambiables, permitiendo variar el algoritmo independientemente de los clientes que lo utilizan.
+
+### Evaluación en SmartGrid
+
+En el módulo de facturación, la variación en la forma de calcular las tarifas está asociada directamente al tipo de factura que se genera, responsabilidad que ya se encuentra cubierta mediante Factory Method y el polimorfismo de las implementaciones concretas de factura.
+
+Como cada factura encapsula su propia lógica de cálculo desde el momento en que es instanciada por su fábrica correspondiente, delegar esa misma operación a una jerarquía paralela de estrategias resultaría redundante.
+
+### Razones para no implementarlo
+
+Se decidió no implementar este patrón por las siguientes razones:
+
+- El cálculo diferenciado de tarifas ya está resuelto mediante Factory Method y el polimorfismo de las clases de factura.
+- Una factura no necesita cambiar su algoritmo de cálculo dinámicamente una vez que ha sido creada.
+- Introducir interfaces y clases de estrategia duplicaría la estructura ya existente de productos y fábricas.
+- Spring Boot permite inyectar las fábricas correspondientes sin acoplar el servicio principal a las clases concretas.
+
+La combinación actual entre fábricas y clases concretas mantiene el módulo de facturación limpio y preparado para agregar nuevos tipos de clientes sin modificar la lógica existente. Solo valdría la pena incorporar Strategy si en el futuro una misma factura requiriera alternar dinámicamente entre distintos esquemas tarifarios —como tarifa horaria, estacional o por subsidio— en tiempo de ejecución.
+
+---
+
+
+## Patrón Template Method
+
+### ¿Qué es?
+
+El patrón Template Method define el esqueleto de un algoritmo en una clase base abstracta, dejando que las subclases redefinan ciertos pasos específicos sin alterar la estructura general del proceso.
+
+### Evaluación en SmartGrid
+
+El diseño de SmartGrid prioriza la composición y el encadenamiento flexible de objetos por encima de las jerarquías rígidas de herencia.
+
+Por ejemplo, el agregado de auditoría en la autenticación se resuelve con Decorator, la validación secuencial en el registro de plantas con Chain of Responsibility y la construcción de estructuras complejas paso a paso con Builder.
+
+Imponer una superclase abstracta con métodos plantilla obligaría a acoplar los servicios mediante herencia estricta.
+
+### Razones para no implementarlo
+
+Se decidió no implementar este patrón por las siguientes razones:
+
+- Se priorizó la composición sobre la herencia para mantener un bajo acoplamiento entre los componentes.
+- Los flujos con pasos variables o extensibles ya están resueltos mediante Chain of Responsibility, Decorator y Builder.
+- La herencia rígida dificulta combinar comportamientos de manera independiente en tiempo de ejecución.
+- Los servicios en Spring Boot se organizan de forma más natural inyectando colaboradores pequeños que extendiendo clases base pesadas.
+
+Apoyarse en composición permite activar, reordenar o ampliar pasos de validación y procesamiento sin quedar atados a una jerarquía de clases padre. Este patrón únicamente sería útil si aparecieran varios procesos por lotes o reportes con exactamente la misma secuencia fija de pasos donde solo cambiara un detalle puntual en medio del flujo.
+
+---
+
+
+## Patrón Visitor
+
+### ¿Qué es?
+
+El patrón Visitor permite separar un algoritmo de la estructura de objetos sobre la que opera, facilitando agregar nuevas operaciones sin modificar las clases de los elementos visitados mediante despacho doble.
+
+### Evaluación en SmartGrid
+
+El modelo de dominio de SmartGrid es plano y está compuesto por entidades independientes en lugar de estructuras jerárquicas complejas como árboles o grafos heterogéneos.
+
+Además, la principal línea de crecimiento del proyecto consiste en agregar nuevos tipos de facturas o nuevas fuentes de energía renovable, escenario que Factory Method y Builder resuelven sin modificar los servicios existentes, mientras que Visitor penaliza precisamente la incorporación de nuevos tipos de elementos.
+
+### Razones para no implementarlo
+
+Se decidió no implementar este patrón por las siguientes razones:
+
+- El dominio no maneja estructuras compuestas o árboles de objetos heterogéneos que requieran recorridos especializados.
+- El sistema necesita facilitar la adición de nuevos tipos de elementos, justo el punto débil del patrón Visitor.
+- Implementar despacho doble en Java añade complejidad sintáctica innecesaria para operaciones directas.
+- Las consultas y cálculos actuales se resuelven de forma clara en los servicios y entidades correspondientes.
+
+Conservar las operaciones dentro de las propias entidades y servicios mantiene el código legible y preparado para sumar nuevos tipos de generación o facturación sin romper contratos previos. Si el sistema evolucionara hacia un simulador topológico de nodos eléctricos anidados sobre los cuales haya que ejecutar múltiples análisis externos —como flujo de carga, pérdidas térmicas o auditorías normativas—, Visitor sería un candidato adecuado.
+
+---
+
 # SmartGrid — Guía de instalación y ejecución
 
 ## 1. Descripción del proyecto
