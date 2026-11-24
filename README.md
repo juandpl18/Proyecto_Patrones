@@ -1038,7 +1038,7 @@ Para iniciar SmartGrid en futuras ocasiones, sigue este orden:
 | Autenticación | http://localhost:8080/api/auth/login |
 
 **Nota:** el backend y el frontend deben permanecer ejecutándose simultáneamente para que la aplicación funcione correctamente.s
-```
+
 
 Con estos pasos se puede preparar el entorno local de SmartGrid, ejecutar el backend y la interfaz Angular y comprobar los patrones de diseño implementados.
 
