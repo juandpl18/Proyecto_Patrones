@@ -822,428 +822,222 @@ Conservar las operaciones dentro de las propias entidades y servicios mantiene e
 
 ---
 
-# SmartGrid — Guía de instalación y ejecución
+## Instalación y ejecución del proyecto
 
-## 1. Descripción del proyecto
+### 1. Requisitos previos
 
-SmartGrid es un proyecto académico desarrollado con Java, Spring Boot, PostgreSQL y Angular. Su objetivo es aplicar patrones de diseño de software en un sistema relacionado con la gestión de energía.
+Antes de ejecutar SmartGrid, asegúrate de tener instalados:
 
-El proyecto incluye un backend que expone servicios mediante una API REST, una base de datos PostgreSQL y una interfaz web desarrollada con Angular.
+- **Java JDK 21**.
+- **PostgreSQL**.
+- **Node.js y npm** compatibles con Angular 20.
+- **IntelliJ IDEA** o un editor compatible.
+- Git (si se va a clonar el repositorio).
 
-Entre los patrones implementados se encuentran Singleton, Factory Method, Builder, Flyweight, Proxy, Adapter, Decorator y Facade.
+El proyecto incluye Maven Wrapper, por lo que no es necesario instalar Maven manualmente.
 
-## 2. Requisitos previos
+### 2. Descargar el repositorio
 
-Antes de ejecutar el proyecto, se recomienda tener instaladas las siguientes herramientas:
-
-### Backend
-- Java JDK 21.
-- IntelliJ IDEA o un editor compatible con proyectos Maven.
-- Maven, si se desea ejecutarlo desde la terminal y no mediante el Maven Wrapper del proyecto.
-
-### Base de datos
-- PostgreSQL.
-- pgAdmin 4, recomendado para administrar la base de datos.
-
-### Frontend
-- Node.js, compatible con la versión de Angular utilizada.
-- npm, incluido normalmente con Node.js.
-- Un navegador web moderno.
-
-El proyecto se desarrolló principalmente con IntelliJ IDEA para el backend y Angular CLI para el frontend.
-
-## 3. Descargar el repositorio
-
-El código fuente está disponible en GitHub:
-
-- [Repositorio principal Proyecto_Patrones](https://github.com/juandpl18/Proyecto_Patrones)
-- [Backend Spring Boot](https://github.com/juandpl18/Proyecto_Patrones/tree/main/smartgrid/smartgrid)
-- [Frontend Angular](https://github.com/juandpl18/Proyecto_Patrones/tree/main/smartgrid-frontend)
-- [Archivo SQL de SmartGrid](https://github.com/juandpl18/Proyecto_Patrones/blob/main/Base%20de%20datos/smartgrid.sql)
-
-### Descargar mediante ZIP
-
-1. Abrir el repositorio principal.
-2. Seleccionar **Code → Download ZIP**.
-3. Extraer el archivo descargado en una carpeta del equipo.
-
-### Descargar mediante Git
-
-También se puede clonar el repositorio:
+Clonar el repositorio desde una terminal:
 
 ```bash
 git clone https://github.com/juandpl18/Proyecto_Patrones.git
+cd Proyecto_Patrones
 ```
+
+También puedes descargarlo desde GitHub mediante **Code → Download ZIP** y extraerlo en tu equipo.
 
 La estructura principal es:
 
 ```text
 Proyecto_Patrones/
-├── Base de datos/
-│   └── smartgrid.sql
 ├── smartgrid/
 │   └── smartgrid/          # Backend Spring Boot
-├── smartgrid-frontend/     # Frontend Angular
-└── README.md
+└── smartgrid-frontend/     # Frontend Angular
 ```
 
-## 4. Configurar la base de datos PostgreSQL
+### 3. Configurar PostgreSQL
 
-### 4.1. Crear la base de datos
+Inicia PostgreSQL y crea una base de datos llamada `smartgrid`:
 
-1. Abrir pgAdmin 4.
-2. Conectarse al servidor PostgreSQL.
-3. Crear una base de datos llamada `smartgrid`.
-
-La configuración local utilizada originalmente es:
-
-```text
-Host: localhost
-Puerto: 5432
-Base de datos: smartgrid
-Usuario: postgres
+```sql
+CREATE DATABASE smartgrid;
 ```
 
-Si el servidor utiliza otro puerto o usuario, será necesario ajustar la configuración.
+**Importante:** el backend utiliza Flyway para administrar la estructura de la base de datos. Al iniciar la aplicación, las migraciones SQL se ejecutan automáticamente.
 
-### 4.2. Importar el archivo SQL
+No es necesario importar manualmente un archivo SQL para una instalación nueva.
 
-El repositorio incluye el archivo:
+Si ya tienes una base de datos con información del proyecto, no la elimines ni la recrees. Conserva los datos existentes y realiza una copia de seguridad antes de efectuar cambios.
 
-```text
-Base de datos/smartgrid.sql
+### 4. Configurar las variables de entorno del backend
+
+El backend utiliza variables de entorno para configurar la conexión con PostgreSQL y la seguridad JWT.
+
+En Windows PowerShell, ejecuta:
+
+```powershell
+$env:DB_URL="jdbc:postgresql://localhost:5432/smartgrid"
+$env:DB_USER="postgres"
+$env:DB_PASSWORD="TU_CLAVE_POSTGRES"
+$env:JWT_SECRET="REEMPLAZA_POR_UN_SECRETO_PRIVADO_DE_AL_MENOS_32_BYTES"
 ```
 
-Este archivo debe contener las instrucciones necesarias para crear las tablas y, si corresponde, insertar los datos de prueba.
-
-Para importarlo:
-
-1. Seleccionar la base de datos `smartgrid` en pgAdmin.
-2. Abrir **Query Tool**.
-3. Cargar el archivo SQL.
-4. Revisar su contenido y ejecutar las instrucciones.
-
-**Importante:** si el archivo contiene un respaldo en formato personalizado de PostgreSQL, no se debe ejecutar directamente como SQL. En ese caso, se debe utilizar la herramienta de restauración apropiada. Si está en formato SQL plano, se puede ejecutar mediante Query Tool.
-
-Antes de continuar, comprobar que las tablas necesarias existan y que los datos de prueba estén disponibles.
-
-## 5. Configurar el backend Spring Boot
-
-### 5.1. Abrir el proyecto
-
-En IntelliJ IDEA:
-
-1. Seleccionar **File → Open**.
-2. Abrir la carpeta:
-
-```text
-Proyecto_Patrones/smartgrid/smartgrid
-```
-
-3. Seleccionar el archivo `pom.xml` si IntelliJ solicita importar el proyecto Maven.
-4. Esperar a que se descarguen las dependencias.
-
-### 5.2. Verificar Java 21
-
-En IntelliJ, entrar en:
-
-```text
-File → Project Structure → Project
-```
-
-Comprobar que el SDK del proyecto sea Java 21.
-
-También se puede ejecutar en la terminal:
+En Linux o macOS:
 
 ```bash
-java -version
+export DB_URL="jdbc:postgresql://localhost:5432/smartgrid"
+export DB_USER="postgres"
+export DB_PASSWORD="TU_CLAVE_POSTGRES"
+export JWT_SECRET="REEMPLAZA_POR_UN_SECRETO_PRIVADO_DE_AL_MENOS_32_BYTES"
 ```
 
-### 5.3. Configurar la conexión a PostgreSQL
+Reemplaza los valores de acuerdo con tu instalación local. Mantén estas variables configuradas en la misma terminal desde la que iniciarás el backend.
 
-Abrir el archivo:
+No publiques contraseñas ni secretos reales en GitHub.
 
-```text
-src/main/resources/application.properties
-```
+### 5. Ejecutar el backend Spring Boot
 
-Verificar que los datos de conexión coincidan con la configuración local.
-
-Ejemplo:
-
-```properties
-spring.application.name=smartgrid
-
-spring.datasource.url=jdbc:postgresql://localhost:5432/smartgrid
-spring.datasource.username=postgres
-spring.datasource.password=${DB_PASSWORD}
-
-spring.jpa.hibernate.ddl-auto=update
-spring.jpa.show-sql=true
-spring.jpa.properties.hibernate.format_sql=true
-```
-
-En este ejemplo, `DB_PASSWORD` es una variable de entorno que contiene la contraseña de PostgreSQL. Se debe configurar antes de iniciar la aplicación.
-
-No se deben publicar contraseñas reales en GitHub. Si la configuración existente utiliza otro mecanismo, debe conservarse o adaptarse correctamente antes de ejecutar el proyecto.
-
-### 5.4. Iniciar el backend
-
-Localizar la clase principal:
-
-```text
-src/main/java/com/smartgrid/smartgrid/SmartgridApplication.java
-```
-
-Abrirla y pulsar **Run** en IntelliJ.
-
-También se puede ejecutar desde la carpeta del backend:
+Abre una terminal y dirígete a la carpeta donde se encuentra el archivo `pom.xml`:
 
 ```bash
-mvn spring-boot:run
+cd smartgrid/smartgrid
 ```
 
-Si Maven no está instalado, se puede utilizar el Maven Wrapper cuando esté incluido en el repositorio.
+En Windows PowerShell:
 
-El servidor normalmente queda disponible en:
+```powershell
+.\mvnw.cmd spring-boot:run
+```
+
+En Linux o macOS:
+
+```bash
+./mvnw spring-boot:run
+```
+
+Al iniciar correctamente, el backend estará disponible en:
 
 ```text
 http://localhost:8080
 ```
 
-Esta dirección corresponde a la raíz del servidor; no necesariamente muestra una página web.
+Durante el arranque:
 
-## 6. Configurar el frontend Angular
+- Flyway ejecutará las migraciones pendientes.
+- Hibernate validará la estructura de la base de datos.
+- Spring Boot iniciará los servicios y endpoints REST.
 
-### 6.1. Abrir el proyecto
+**No cierres esta terminal mientras estés utilizando el sistema.**
 
-Abrir una terminal en la carpeta:
+### 6. Instalar y ejecutar el frontend Angular
 
-```text
-Proyecto_Patrones/smartgrid-frontend
-```
-
-Verificar que estén presentes, entre otros, estos archivos:
-
-```text
-angular.json
-package.json
-package-lock.json
-tsconfig.json
-src/
-public/
-```
-
-### 6.2. Verificar Node.js y npm
-
-Ejecutar:
+Abre una segunda terminal, sin detener el backend, y dirígete a la carpeta del frontend:
 
 ```bash
-node -v
-npm -v
+cd smartgrid-frontend
 ```
 
-Si alguno de los comandos no funciona, instalar Node.js en una versión compatible con Angular.
-
-### 6.3. Instalar las dependencias
-
-Desde la carpeta `smartgrid-frontend`, ejecutar:
+Instala las dependencias:
 
 ```bash
 npm install
 ```
 
-Este comando descarga las dependencias declaradas en `package.json`. No es necesario subir `node_modules` a GitHub.
-
-### 6.4. Compilar el frontend
-
-Ejecutar:
+Cuando termine la instalación, inicia Angular:
 
 ```bash
-npx ng build
+npm start
 ```
 
-Si la compilación termina correctamente, Angular ha podido construir el proyecto.
-
-Si aparecen errores, se deben corregir antes de considerar terminada la verificación.
-
-### 6.5. Iniciar Angular
-
-Ejecutar:
-
-```bash
-npx ng serve
-```
-
-Abrir en el navegador la dirección que indique Angular, normalmente:
+La aplicación estará disponible en:
 
 ```text
 http://localhost:4200
 ```
 
-Para probar la aplicación completa, mantener abiertas las terminales del frontend y del backend.
+Mantén ambas terminales abiertas: una para Spring Boot y otra para Angular.
 
-## 7. Conectar Angular con Spring Boot
+### 7. Iniciar sesión en SmartGrid
 
-Angular debe enviar sus solicitudes HTTP a las rutas expuestas por el backend.
-
-Durante el desarrollo local, el backend normalmente utiliza:
-
-```text
-http://localhost:8080
-```
-
-Y Angular:
+Desde el navegador, abre:
 
 ```text
 http://localhost:4200
 ```
 
-Revisar los servicios del frontend para comprobar que utilizan las rutas correctas de la API, por ejemplo, las rutas de facturación, plantas o Facade que existan en el código.
+Ingresa con una cuenta registrada y activa en la base de datos.
 
-Si las solicitudes son bloqueadas por el navegador debido a CORS, se debe revisar la configuración CORS del backend y autorizar el origen de Angular para el entorno de desarrollo.
+El proceso de autenticación utiliza el endpoint:
 
-No se debe asumir que todas las rutas tienen el mismo prefijo. Las URL de los controladores deben coincidir con las utilizadas por los servicios Angular.
-
-## 8. Probar los patrones de diseño
-
-Los siguientes ejemplos corresponden a las rutas y operaciones implementadas en el proyecto. Si algún controlador ha cambiado, se debe utilizar la ruta definida actualmente en el código.
-
-### 8.1. Singleton
-
-El patrón Singleton se utiliza para mantener una instancia compartida de la configuración del sistema.
-
-Se puede comprobar mediante el endpoint de estado definido por `SmartGridController` o el controlador equivalente del proyecto.
-
-### 8.2. Factory Method
-
-El patrón Factory Method permite seleccionar la fábrica que crea el tipo de factura solicitado.
-
-En la implementación del proyecto, la ruta utilizada es `/api/facturacion`. Revisar los parámetros que recibe el controlador antes de enviar la solicitud desde Postman.
-
-### 8.3. Builder
-
-El patrón Builder permite construir objetos `PlantaEnergia` indicando los atributos obligatorios y los opcionales.
-
-La ruta es:
-
-```text
-POST /api/planta/crear
+```http
+POST http://localhost:8080/api/auth/login
+Content-Type: application/json
 ```
 
-El controlador utiliza los parámetros de la solicitud, busca el usuario y delega la autorización al Proxy. Para una prueba autorizada se puede utilizar, por ejemplo, un usuario administrador existente:
+Ejemplo de solicitud:
 
-```text
-http://localhost:8080/api/planta/crear?username=admin&nombre=PlantaSolar&fuente=SOLAR&capacidad=1000&bateria=true&ubicacion=Bucaramanga
+```json
+{
+  "username": "admin",
+  "password": "TU_CONTRASENA"
+}
 ```
 
-Si el usuario tiene permisos, se devuelve el objeto construido en formato JSON. En la implementación actual, esta operación construye el objeto en memoria; no significa que la planta se guarde en PostgreSQL.
+Si las credenciales son correctas, el backend devolverá un token JWT. Este token se utiliza para autorizar las solicitudes a los endpoints protegidos.
 
-### 8.4. Flyweight
+La contraseña depende de los usuarios registrados en la base de datos; no se debe asumir una contraseña predeterminada para todas las instalaciones.
 
-El patrón Flyweight permite compartir objetos que contienen información común de las fuentes de energía.
+### 8. Ejecutar las pruebas del backend
 
-La prueba automatizada `FlyweightTest` comprueba que dos plantas con la misma fuente solar reutilizan la misma instancia compartida.
+Para ejecutar las pruebas automatizadas, abre una terminal en la carpeta del backend:
 
-### 8.5. Proxy
-
-El patrón Proxy controla el acceso a la construcción de plantas mediante la validación del rol del usuario.
-
-Para probarlo, se puede enviar la misma solicitud con un usuario administrador y luego con un usuario que no tenga el rol requerido. La solicitud no autorizada debe rechazarse con un estado HTTP `403 Forbidden`.
-
-Esta validación es una demostración académica basada en el usuario enviado en la solicitud; no reemplaza un sistema completo de autenticación para producción.
-
-### 8.6. Adapter y Decorator
-
-Estos patrones se aplican al módulo de inicio de sesión y auditoría. Para comprobarlos, ejecutar el flujo de inicio de sesión disponible en el proyecto y revisar el resultado y los registros de auditoría que genera la implementación.
-
-### 8.7. Facade
-
-El patrón Facade proporciona un punto de acceso simplificado a varias operaciones del sistema.
-
-Las rutas implementadas incluyen:
-
-```text
-/api/facade/resumen
-/api/facade/panel
-/api/facade/panel-json
+```bash
+cd smartgrid/smartgrid
 ```
 
-Se pueden probar desde Postman o desde el frontend, según la integración disponible.
+En Windows:
 
-## 9. Estructura principal del backend
-
-```text
-smartgrid/
-├── src/
-│   ├── main/
-│   │   ├── java/com/smartgrid/smartgrid/
-│   │   │   ├── builder/
-│   │   │   ├── config/
-│   │   │   ├── controller/
-│   │   │   ├── factory/
-│   │   │   ├── model/
-│   │   │   ├── repository/
-│   │   │   └── service/
-│   │   └── resources/
-│   │       └── application.properties
-│   └── test/
-├── pom.xml
-└── README.md
+```powershell
+.\mvnw.cmd test
 ```
 
-La estructura puede variar según las clases y paquetes presentes en la versión actual del repositorio.
+En Linux o macOS:
 
-## 10. Problemas frecuentes
+```bash
+./mvnw test
+```
 
-**Error de conexión con PostgreSQL**
-- Comprobar que PostgreSQL esté iniciado.
-- Verificar la base de datos, el puerto, el usuario y la contraseña.
-- Comprobar que las tablas requeridas existan.
+### 9. Compilar el frontend para producción
 
-**Error al compilar Spring Boot**
-- Verificar Java 21.
-- Esperar a que Maven descargue las dependencias.
-- Revisar los mensajes de error de IntelliJ.
+Si deseas comprobar que el frontend puede compilarse correctamente, desde la carpeta `smartgrid-frontend` ejecuta:
 
-**Error al ejecutar Angular**
-- Verificar la versión de Node.js.
-- Ejecutar `npm install`.
-- Revisar los errores de `npx ng build`.
+```bash
+npm run build
+```
 
-**Angular no puede consumir la API**
-- Comprobar que Spring Boot esté ejecutándose.
-- Revisar las URL de los servicios Angular.
-- Revisar la configuración CORS y los errores de la pestaña Network del navegador.
+### 10. Resumen de ejecución
 
-**Error HTTP 403 al crear una planta**
-- Verificar que el usuario exista.
-- Comprobar que esté activo y tenga el rol de administrador requerido.
+Para iniciar SmartGrid en futuras ocasiones, sigue este orden:
 
-## 11. Resumen de ejecución
+1. Iniciar PostgreSQL.
+2. Abrir una terminal en `smartgrid/smartgrid`.
+3. Configurar las variables de entorno del backend.
+4. Ejecutar `.\mvnw.cmd spring-boot:run`.
+5. Abrir otra terminal en `smartgrid-frontend`.
+6. Ejecutar `npm start` (después de instalar las dependencias la primera vez).
+7. Abrir `http://localhost:4200`.
+8. Iniciar sesión y utilizar los módulos disponibles.
 
-```text
-1. Descargar el repositorio
-          ↓
-2. Crear y preparar PostgreSQL
-          ↓
-3. Importar smartgrid.sql si corresponde
-          ↓
-4. Configurar application.properties
-          ↓
-5. Iniciar Spring Boot en el puerto 8080
-          ↓
-6. Abrir smartgrid-frontend
-          ↓
-7. Ejecutar npm install
-          ↓
-8. Ejecutar npx ng build
-          ↓
-9. Ejecutar npx ng serve
-          ↓
-10. Abrir http://localhost:4200
-          ↓
-11. Probar la conexión con el backend y las funciones
+**Direcciones principales:**
+
+| Componente | Dirección |
+|---|---|
+| Frontend Angular | http://localhost:4200 |
+| Backend Spring Boot | http://localhost:8080 |
+| Autenticación | http://localhost:8080/api/auth/login |
+
+**Nota:** el backend y el frontend deben permanecer ejecutándose simultáneamente para que la aplicación funcione correctamente.s
 ```
 
 Con estos pasos se puede preparar el entorno local de SmartGrid, ejecutar el backend y la interfaz Angular y comprobar los patrones de diseño implementados.
