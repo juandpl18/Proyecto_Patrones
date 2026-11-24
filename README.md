@@ -278,20 +278,6 @@ Implementar Bridge en este punto implicaría agregar abstracciones, interfaces e
 
 Por esta razón, se decidió no utilizar este patrón para evitar aumentar innecesariamente la complejidad de la arquitectura.
 
-### Patrón Composite
-
-El patrón Composite permite representar estructuras jerárquicas de objetos en las cuales tanto los elementos individuales como los grupos de elementos pueden ser tratados mediante una misma interfaz.
-
-Un ejemplo común sería una estructura de archivos donde una carpeta puede contener archivos y otras carpetas, permitiendo tratar ambos elementos como componentes de una misma estructura.
-
-En Smart Grid no se presenta actualmente una estructura jerárquica de este tipo. Las entidades y componentes desarrollados, como usuarios, facturas y plantas de energía, funcionan como elementos independientes y no necesitan formar una estructura de árbol donde un objeto contenga otros objetos del mismo tipo.
-
-Por ejemplo, una `PlantaEnergia` no contiene otras plantas que deban ser tratadas como una única estructura, ni una factura contiene otras facturas que necesiten ser administradas mediante una composición jerárquica.
-
-Por esta razón, implementar Composite únicamente para demostrar el patrón generaría clases y estructuras adicionales sin aportar una solución a una necesidad real del sistema.
-
-Se decidió no utilizar este patrón y mantener la arquitectura enfocada en las relaciones y responsabilidades que realmente necesita Smart Grid.
-
 ## Patrón Facade 
 
 Se implementó el patrón de diseño estructural **Facade** para simplificar el acceso a las funcionalidades principales del sistema SmartGrid. Este patrón proporciona un punto de entrada unificado que coordina las operaciones de diferentes servicios del backend.
@@ -600,6 +586,211 @@ En esta implementación, Command trabaja junto con Builder: Command encapsula la
 
 ---
 
+## Patrones incorporados durante la evolución del proyecto
+
+Durante la primera etapa de desarrollo se decidió no implementar algunos patrones porque el sistema todavía no presentaba necesidades funcionales que justificaran su utilización. En ese momento, la arquitectura era más sencilla y las operaciones podían resolverse mediante los servicios, controladores y patrones que ya estaban implementados.
+
+Sin embargo, a medida que SmartGrid evolucionó y se incorporaron funcionalidades de consumo energético, jerarquías de zonas, supervisión de capacidad, operación de plantas, balanceo de cargas y diferentes modalidades de facturación, surgieron nuevas necesidades de organización y comportamiento.
+
+Por esta razón, se revisó la decisión inicial y se incorporaron cinco patrones adicionales: *Composite, Observer, State, Strategy y Template Method*.
+
+### 9. Composite — Patrón estructural
+
+*¿Qué es?*
+
+El patrón Composite permite organizar objetos en estructuras jerárquicas, tratando de la misma manera tanto los elementos individuales como los grupos que contienen otros elementos.
+
+*Propósito:* representar estructuras jerárquicas mediante una interfaz común, permitiendo realizar operaciones sobre elementos individuales y compuestos sin diferenciarlos desde el código que los utiliza.
+
+*Aplicación en SmartGrid:*
+
+Se utiliza para representar la estructura jerárquica de las zonas de la red eléctrica. Una zona puede ser un elemento individual o contener otras zonas.
+
+El patrón permite consultar el consumo de una zona individual o calcular el consumo acumulado de una zona compuesta por otras zonas, utilizando una misma interfaz.
+
+*Clases principales:*
+
+- ComponenteRed: define la interfaz común para los elementos de la estructura.
+- ZonaRedNodo: contiene los datos y comportamientos compartidos por los nodos.
+- ZonaHoja: representa una zona que no contiene otras zonas.
+- ZonaCompuesta: representa una zona que puede contener otros componentes y agregar sus consumos.
+
+*¿Por qué no se implementó inicialmente y por qué ahora sí?*
+
+En la primera etapa del proyecto, las zonas de SmartGrid se manejaban como registros independientes. No existía una jerarquía funcional que necesitara representar zonas principales con otras zonas en su interior. Por esta razón, implementar Composite habría agregado clases y relaciones innecesarias para las funcionalidades disponibles en ese momento.
+
+Posteriormente, al ampliar el módulo de red y consumo energético, surgió la necesidad de representar zonas jerárquicas y consultar el consumo acumulado de sus componentes. Esto justificó la incorporación de Composite, ya que permite tratar de manera uniforme las zonas individuales y las compuestas, facilitando la extensión de la estructura de la red.
+
+---
+
+### 12. Observer — Patrón de comportamiento
+
+*¿Qué es?*
+
+El patrón Observer establece una relación de uno a muchos entre objetos. Cuando un objeto cambia o genera un evento, los objetos que están suscritos reciben una notificación y pueden ejecutar sus propias acciones.
+
+*Propósito:* notificar automáticamente a diferentes componentes cuando ocurre un evento, evitando que el objeto que genera dicho evento tenga que conocer directamente todas las acciones que deben ejecutarse.
+
+*Aplicación en SmartGrid:*
+
+Se utiliza en el registro de lecturas de consumo energético. Cuando se registra una nueva lectura, el sujeto observado notifica a los observadores registrados.
+
+Uno de estos observadores es AlertaCapacidadObserver, encargado de evaluar el consumo reciente de una zona y generar alertas cuando se alcanzan o superan determinados umbrales de capacidad.
+
+De esta manera, el registro de una lectura puede activar automáticamente la supervisión de la capacidad sin mezclar ambas responsabilidades en un mismo servicio.
+
+*Clases principales:*
+
+- LecturaObserver: define el contrato que deben implementar los observadores.
+- LecturaConsumoSubject: administra los observadores y realiza las notificaciones.
+- AlertaCapacidadObserver: evalúa el consumo reciente y registra alertas cuando se cumplen las condiciones establecidas.
+- LecturaService: integra el registro de lecturas con el proceso de notificación.
+
+*¿Por qué no se implementó inicialmente y por qué ahora sí?*
+
+En la primera etapa, el backend trabajaba principalmente mediante operaciones REST síncronas: el usuario realizaba una solicitud y el sistema devolvía una respuesta. No existía un evento que necesitara notificar a varios componentes independientes, por lo que Observer no ofrecía una ventaja significativa.
+
+Posteriormente, al incorporar el registro de lecturas y la supervisión de la capacidad de las zonas, apareció la necesidad de ejecutar acciones automáticas después de guardar una lectura. Por esta razón se incorporó Observer, permitiendo separar el evento de registro de consumo de las acciones que reaccionan a él.
+
+Esto también facilita agregar nuevos observadores en el futuro sin modificar directamente el componente encargado de registrar las lecturas.
+
+---
+
+### 13. State — Patrón de comportamiento
+
+*¿Qué es?*
+
+El patrón State permite que un objeto modifique su comportamiento dependiendo de su estado interno. Cada estado se representa mediante una clase independiente que contiene las reglas correspondientes.
+
+*Propósito:* organizar los comportamientos asociados a los diferentes estados de un objeto, evitando concentrar todas las condiciones y transiciones en una sola clase.
+
+*Aplicación en SmartGrid:*
+
+Se utiliza para administrar el ciclo de vida operativo de las plantas de generación eléctrica.
+
+Una planta puede encontrarse en diferentes estados:
+
+- *ACTIVA:* la planta puede operar y generar energía.
+- *MANTENIMIENTO:* la planta se encuentra en mantenimiento y no debe generar energía.
+- *FUERA_DE_SERVICIO:* la planta no está disponible para operar.
+
+Cada estado define su comportamiento y las transiciones permitidas hacia otros estados. De esta manera, el sistema puede controlar los cambios de estado y determinar si una planta está habilitada para generar energía.
+
+*Clases principales:*
+
+- EstadoPlantaState: define el contrato común de los estados.
+- EstadoPlantaResolver: identifica y obtiene el comportamiento correspondiente al estado actual.
+- ActivaState: representa el comportamiento de una planta activa.
+- MantenimientoState: representa el comportamiento de una planta en mantenimiento.
+- FueraDeServicioState: representa el comportamiento de una planta fuera de servicio.
+
+*¿Por qué no se implementó inicialmente y por qué ahora sí?*
+
+En la primera etapa del proyecto, los estados de las entidades eran atributos sencillos que podían manejarse mediante validaciones y condiciones dentro de los servicios. No existían suficientes comportamientos diferentes asociados a cada estado para justificar la creación de clases especializadas.
+
+Posteriormente, con el desarrollo de las funcionalidades de operación de plantas, los estados comenzaron a determinar reglas importantes del sistema, como permitir o impedir la generación de energía y controlar qué cambios de estado eran válidos.
+
+Esto justificó la incorporación de State, ya que permite encapsular las reglas de cada estado y mantener organizado el ciclo de vida de las plantas, evitando que las condiciones crezcan y se dispersen por diferentes servicios.
+
+---
+
+### 14. Strategy — Patrón de comportamiento
+
+*¿Qué es?*
+
+El patrón Strategy permite definir diferentes algoritmos o comportamientos mediante una interfaz común, de manera que puedan seleccionarse e intercambiarse según las necesidades del sistema.
+
+*Propósito:* separar los algoritmos de la lógica que los utiliza, facilitando la incorporación de nuevas estrategias sin modificar directamente los servicios principales.
+
+*Aplicación en SmartGrid:*
+
+Se utiliza en tres funcionalidades principales del sistema:
+
+*1. Estrategias de producción energética*
+
+Permiten seleccionar el cálculo de producción correspondiente según la fuente de energía utilizada por la planta.
+
+- SolarProduccionStrategy: calcula la producción para plantas solares.
+- EolicaProduccionStrategy: calcula la producción para plantas eólicas.
+- HidraulicaProduccionStrategy: calcula la producción para plantas hidráulicas.
+
+*2. Estrategias de balanceo de cargas*
+
+Permiten seleccionar diferentes criterios para distribuir o reducir la demanda energética.
+
+- MayorDeficitBalanceoStrategy: prioriza las zonas que presentan un mayor déficit energético.
+- ProporcionalBalanceoStrategy: distribuye las acciones de balanceo de manera proporcional.
+
+*3. Estrategias de facturación*
+
+Permiten seleccionar diferentes modalidades de cálculo de tarifas.
+
+- PlanaTarifaStrategy: utiliza una tarifa plana.
+- EscalonadaTarifaStrategy: aplica tarifas según los niveles de consumo.
+- HorariaTarifaStrategy: considera las franjas horarias para calcular el costo.
+
+*Clases principales:*
+
+- Producción: ProduccionStrategy, SolarProduccionStrategy, EolicaProduccionStrategy, HidraulicaProduccionStrategy y ProduccionStrategyRegistry.
+- Balanceo: BalanceoStrategy, MayorDeficitBalanceoStrategy, ProporcionalBalanceoStrategy y BalanceoStrategyRegistry.
+- Tarifas: TarifaStrategy, PlanaTarifaStrategy, EscalonadaTarifaStrategy, HorariaTarifaStrategy y TarifaStrategyRegistry.
+
+*¿Por qué no se implementó inicialmente y por qué ahora sí?*
+
+En la primera etapa, las funcionalidades del sistema eran más limitadas y no existían varias familias de algoritmos que necesitaran intercambiarse de manera independiente. Los cálculos y operaciones disponibles podían resolverse mediante las implementaciones existentes, sin necesidad de introducir diferentes estrategias.
+
+Posteriormente, al ampliar el sistema con diferentes fuentes de generación energética, criterios de balanceo de cargas y modalidades tarifarias, surgió la necesidad de separar los algoritmos y seleccionar el comportamiento adecuado según cada operación.
+
+Esto justificó la incorporación de Strategy, ya que permite agregar o modificar algoritmos sin concentrar todas las fórmulas en un único servicio ni aumentar la cantidad de condicionales según el tipo de operación.
+
+---
+
+### 15. Template Method — Patrón de comportamiento
+
+*¿Qué es?*
+
+El patrón Template Method define la estructura general de un algoritmo en una clase base, permitiendo que las clases derivadas implementen o especialicen determinados pasos sin modificar el orden general del proceso.
+
+*Propósito:* reutilizar una secuencia de operaciones comunes y permitir que ciertos pasos varíen según la necesidad de cada implementación.
+
+*Aplicación en SmartGrid:*
+
+Se utiliza en el módulo de facturación para mantener un flujo común de generación de facturas, aunque el consumo energético pueda obtenerse de diferentes maneras.
+
+El proceso conserva una secuencia general de operaciones, como validar el cliente y el período, obtener el consumo, seleccionar la tarifa, calcular los importes y guardar la factura cuando corresponde.
+
+La diferencia entre las modalidades se encuentra principalmente en la forma de obtener el consumo:
+
+- *Facturación por lecturas:* obtiene el consumo a partir de las lecturas energéticas registradas.
+- *Facturación estimada:* calcula una estimación utilizando el promedio de las últimas tres facturas no anuladas.
+
+*Clases principales:*
+
+- PlantillaFacturacion: define el flujo general mediante el método ejecutar().
+- FacturacionPorLecturas: implementa la obtención del consumo mediante las lecturas registradas.
+- FacturacionEstimada: implementa la obtención del consumo mediante una estimación basada en facturas anteriores.
+- PlantillaFacturacionRegistry: selecciona la plantilla de facturación correspondiente al modo solicitado.
+
+*¿Por qué no se implementó inicialmente y por qué ahora sí?*
+
+En la primera etapa, el proceso de facturación era más sencillo y no existían diferentes modalidades que compartieran una secuencia de operaciones. Por esta razón, implementar una clase base con pasos especializados habría agregado complejidad sin aportar una ventaja funcional clara.
+
+Posteriormente, al incorporar la facturación basada en lecturas reales y la facturación estimada, surgió la necesidad de mantener un mismo procedimiento general, pero permitiendo que la obtención del consumo cambiara según la modalidad seleccionada.
+
+Esto justificó la incorporación de Template Method, ya que permite reutilizar el flujo común de facturación y especializar únicamente los pasos que necesitan comportamientos diferentes, evitando duplicar la lógica compartida entre las modalidades.
+
+---
+
+### Justificación general de la evolución de los patrones
+
+La incorporación de estos cinco patrones no representa una contradicción con las decisiones iniciales del proyecto. En la primera etapa, se evaluaron las necesidades existentes y se decidió no agregar estructuras que todavía no tenían una aplicación funcional clara.
+
+A medida que SmartGrid creció, aparecieron nuevos requerimientos que hicieron necesario revisar esas decisiones. Por ejemplo, la administración de zonas jerárquicas justificó Composite; la supervisión automática del consumo justificó Observer; la administración de los estados operativos de las plantas justificó State; la variedad de algoritmos de producción, balanceo y tarifas justificó Strategy; y las diferentes modalidades de facturación justificaron Template Method.
+
+Por lo tanto, la arquitectura evolucionó de acuerdo con las necesidades reales del sistema. La finalidad no fue implementar todos los patrones disponibles, sino seleccionar aquellos que aportaran una solución concreta, mejoraran la separación de responsabilidades y facilitaran el mantenimiento y la ampliación de SmartGrid.
+
+---
+
 ## Patrón Iterator
 
 ### ¿Qué es?
@@ -682,117 +873,6 @@ Se decidió no implementar este patrón por las siguientes razones:
 - Su incorporación podría generar una capa de intermediación innecesaria.
 
 entonces se determinó que Mediator no es necesario para la arquitectura actual de SmartGrid, debido a que los mecanismos existentes permiten organizar y coordinar las operaciones del sistema. Su implementación se podría considerar en futuras versiones si aumenta la complejidad de las interacciones entre los diferentes subsistemas.
-
----
-
-
-## Patrón Observer
-
-### ¿Qué es?
-
-El patrón Observer define una dependencia de uno a muchos entre objetos, de manera que cuando uno cambia de estado, todos sus dependientes son notificados y actualizados automáticamente. Su objetivo es desacoplar al emisor de un evento de los componentes que reaccionan ante él.
-
-### Evaluación en SmartGrid
-
-En el backend desarrollado en Spring Boot, las operaciones funcionan bajo un flujo síncrono de petición y respuesta REST coordinado por medio del patrón Facade, mientras que las validaciones de umbrales y reglas de negocio en la gestión de plantas se ejecutan secuencialmente con Chain of Responsibility sin mantener múltiples suscriptores en memoria.
-
-En el frontend con Angular, la actualización reactiva de la interfaz frente a los cambios de consumo o estado ya está resuelta de forma nativa mediante Signals.
-
-Por lo tanto, no existe actualmente un escenario donde varios módulos independientes del servidor deban suscribirse dinámicamente a un mismo evento.
-
-### Razones para no implementarlo
-
-Se decidió no implementar este patrón por las siguientes razones:
-
-- La comunicación en el backend sigue un flujo síncrono petición-respuesta orquestado mediante Facade.
-- Las validaciones secuenciales sobre las operaciones de la red ya están cubiertas por Chain of Responsibility.
-- Angular gestiona la reactividad de la interfaz de manera nativa con Signals sin requerir suscripciones manuales.
-- No existen múltiples consumidores independientes en el servidor que necesiten reaccionar al mismo evento de forma desacoplada.
-- Implementar una estructura clásica de sujeto y observadores duplicaría mecanismos que el propio framework ya ofrece.
-
-Con las capacidades reactivas del frontend y la organización actual de servicios en el backend, la sincronización de datos se mantiene simple y directa. Su implementación podría considerarse en futuras versiones si el sistema incorpora notificaciones en tiempo real mediante WebSockets o integración con servicios externos independientes.
-
----
-
-
-## Patrón State
-
-### ¿Qué es?
-
-El patrón State permite que un objeto altere su comportamiento cuando su estado interno cambia, encapsulando cada estado en una clase independiente para que parezca que el objeto cambia de clase en tiempo de ejecución.
-
-### Evaluación en SmartGrid
-
-Las entidades principales del dominio —como los usuarios, las facturas y las plantas de generación— manejan estados operativos sencillos, controlados principalmente mediante atributos booleanos y validaciones puntuales antes de ejecutar una operación.
-
-Ninguna de estas entidades atraviesa un ciclo de vida complejo donde todos sus métodos cambien radicalmente de lógica según la fase en la que se encuentren.
-
-Además, los controles previos sobre si una acción puede o no ejecutarse ya se resuelven mediante Proxy y Chain of Responsibility.
-
-### Razones para no implementarlo
-
-Se decidió no implementar este patrón por las siguientes razones:
-
-- Las entidades actuales operan con estados simples que no requieren máquinas de estado complejas.
-- Las validaciones previas a la ejecución de operaciones ya están cubiertas mediante Proxy y Chain of Responsibility.
-- Crear una clase independiente por cada posible estado fragmentaría la lógica de negocio sin resolver un problema real de condicionales extensos.
-- Mantener jerarquías de clases para los estados aumentaría innecesariamente la cantidad de archivos y la complejidad del modelo.
-
-Conservar el estado como atributos directos dentro de las entidades facilita la persistencia con JPA y mantiene el código fácil de leer. Si más adelante las plantas de energía llegan a manejar ciclos de vida complejos —como fases de arranque, sincronización, mantenimiento programado y falla crítica con comportamientos distintos en cada etapa—, tendría sentido migrar esa lógica a un esquema basado en State.
-
----
-
-
-## Patrón Strategy
-
-### ¿Qué es?
-
-El patrón Strategy define una familia de algoritmos, encapsula cada uno en una clase separada y los hace intercambiables, permitiendo variar el algoritmo independientemente de los clientes que lo utilizan.
-
-### Evaluación en SmartGrid
-
-En el módulo de facturación, la variación en la forma de calcular las tarifas está asociada directamente al tipo de factura que se genera, responsabilidad que ya se encuentra cubierta mediante Factory Method y el polimorfismo de las implementaciones concretas de factura.
-
-Como cada factura encapsula su propia lógica de cálculo desde el momento en que es instanciada por su fábrica correspondiente, delegar esa misma operación a una jerarquía paralela de estrategias resultaría redundante.
-
-### Razones para no implementarlo
-
-Se decidió no implementar este patrón por las siguientes razones:
-
-- El cálculo diferenciado de tarifas ya está resuelto mediante Factory Method y el polimorfismo de las clases de factura.
-- Una factura no necesita cambiar su algoritmo de cálculo dinámicamente una vez que ha sido creada.
-- Introducir interfaces y clases de estrategia duplicaría la estructura ya existente de productos y fábricas.
-- Spring Boot permite inyectar las fábricas correspondientes sin acoplar el servicio principal a las clases concretas.
-
-La combinación actual entre fábricas y clases concretas mantiene el módulo de facturación limpio y preparado para agregar nuevos tipos de clientes sin modificar la lógica existente. Solo valdría la pena incorporar Strategy si en el futuro una misma factura requiriera alternar dinámicamente entre distintos esquemas tarifarios —como tarifa horaria, estacional o por subsidio— en tiempo de ejecución.
-
----
-
-
-## Patrón Template Method
-
-### ¿Qué es?
-
-El patrón Template Method define el esqueleto de un algoritmo en una clase base abstracta, dejando que las subclases redefinan ciertos pasos específicos sin alterar la estructura general del proceso.
-
-### Evaluación en SmartGrid
-
-El diseño de SmartGrid prioriza la composición y el encadenamiento flexible de objetos por encima de las jerarquías rígidas de herencia.
-
-Por ejemplo, el agregado de auditoría en la autenticación se resuelve con Decorator, la validación secuencial en el registro de plantas con Chain of Responsibility y la construcción de estructuras complejas paso a paso con Builder.
-
-Imponer una superclase abstracta con métodos plantilla obligaría a acoplar los servicios mediante herencia estricta.
-
-### Razones para no implementarlo
-
-Se decidió no implementar este patrón por las siguientes razones:
-
-- Se priorizó la composición sobre la herencia para mantener un bajo acoplamiento entre los componentes.
-- Los flujos con pasos variables o extensibles ya están resueltos mediante Chain of Responsibility, Decorator y Builder.
-- La herencia rígida dificulta combinar comportamientos de manera independiente en tiempo de ejecución.
-- Los servicios en Spring Boot se organizan de forma más natural inyectando colaboradores pequeños que extendiendo clases base pesadas.
-
-Apoyarse en composición permite activar, reordenar o ampliar pasos de validación y procesamiento sin quedar atados a una jerarquía de clases padre. Este patrón únicamente sería útil si aparecieran varios procesos por lotes o reportes con exactamente la misma secuencia fija de pasos donde solo cambiara un detalle puntual en medio del flujo.
 
 ---
 
@@ -1041,5 +1121,3 @@ Para iniciar SmartGrid en futuras ocasiones, sigue este orden:
 
 
 Con estos pasos se puede preparar el entorno local de SmartGrid, ejecutar el backend y la interfaz Angular y comprobar los patrones de diseño implementados.
-
-
