@@ -1,13 +1,11 @@
-
 package com.smartgrid.smartgrid.controller;
 
+import com.smartgrid.smartgrid.dto.PanelResumenResponse;
 import com.smartgrid.smartgrid.facade.SmartGridFacade;
 import org.springframework.web.bind.annotation.*;
-import com.smartgrid.smartgrid.dto.PanelResumenResponse;
 
 @RestController
 @RequestMapping("/api/facade")
-@CrossOrigin(origins = "*")
 public class SmartGridFacadeController {
 
     private final SmartGridFacade smartGridFacade;

@@ -1,0 +1,24 @@
+### 1. Login (copia el "token" de la respuesta)
+POST http://localhost:8080/api/auth/login
+Content-Type: application/json
+
+{ "username": "admin", "password": "1234" }
+
+### 2. Crear planta (requiere ADMIN) -> 201
+POST http://localhost:8080/api/planta/crear?nombre=Solar Norte&fuente=SOLAR&capacidad=800&bateria=true&ubicacion=Bucaramanga
+Authorization: Bearer PEGA_AQUI_EL_TOKEN
+
+### 3. Listar plantas
+GET http://localhost:8080/api/planta
+Authorization: Bearer PEGA_AQUI_EL_TOKEN
+
+### 4. Sin token -> 401
+GET http://localhost:8080/api/planta
+
+### 5. Fuente inválida -> 400 con formato uniforme
+POST http://localhost:8080/api/planta/crear?nombre=X&fuente=NUCLEAR
+Authorization: Bearer PEGA_AQUI_EL_TOKEN
+
+### 6. Panel (desde la Fase 6 requiere token)
+GET http://localhost:8080/api/facade/panel-json?tipo=RESIDENCIAL&consumo=350
+Authorization: Bearer PEGA_AQUI_EL_TOKEN
